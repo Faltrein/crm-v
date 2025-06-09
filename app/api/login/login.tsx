@@ -24,6 +24,7 @@ export async function loginUser(user: string, pass: string) {
         locked: true,
         locked_until: true,
         f_attempts: true,
+        v_created: true,
       },
     });
 
@@ -92,12 +93,56 @@ export async function loginUser(user: string, pass: string) {
       });
     }
 
-    return {
-      status: 200,
-      data: { id: foundUser.id },
-    };
+    if (foundUser.v_created === true) {
+      // vytvořit token stejným způsobem jako při odeslání emailu
+      const token = `${foundUser.id}-${Date.now()}`;
+      return {
+        status: 200,
+        data: {
+          token,   // token pro frontend
+        }
+      };
+    } else {
+      // běžné přihlášení - vrátit jen id
+      return {
+        status: 200,
+        data: {
+          id: foundUser.id,
+        }
+      };
+    }
   } catch  {
     //console.error("Login error:", err);
+    return { status: 500, data: { error: "Interní chyba serveru." } };
+  }
+}
+
+
+export async function changePassword(userId: string, newPassword: string) {
+  if (!userId || !newPassword) {
+    return { status: 400, data: { error: "Chybí ID uživatele nebo heslo." } };
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const userIdInt = parseInt(userId, 10);
+    if (isNaN(userIdInt)) {
+      return { status: 400, data: { error: "Neplatné ID uživatele." } };
+    }
+    await prisma.v_login.update({
+      where: { id: userIdInt },
+      data: {
+        password_hash: hashedPassword,
+        f_attempts: 0,
+        locked: false,
+        locked_until: null,
+        v_created: false,
+      },
+    });
+
+    return { status: 200, data: { message: "Heslo úspěšně změněno." } };
+  } catch (err) {
+    console.error("Chyba při změně hesla:", err);
     return { status: 500, data: { error: "Interní chyba serveru." } };
   }
 }

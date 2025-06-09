@@ -10,7 +10,7 @@ export async function generateMetadata() {
 
 const Pass_change = () => {
     return (
-        <section id="pass_change">
+        <section id="pass-change">
             <Pass_change_client />
         </section>
     );

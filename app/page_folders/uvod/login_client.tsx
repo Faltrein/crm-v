@@ -4,6 +4,9 @@ import axios from "axios";
 import { handleCookie, Temp_cleaner } from "@/app/venca_lib/venca_lib";
 import { CookiesLoginType, LoginModalType } from "@/app/app_types/global_types";
 import { Modal } from "react-bootstrap";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 export const Login_client = ({consentValue} : CookiesLoginType) => {
     const [user, setUser] = useState("");
@@ -16,6 +19,8 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
     const [wrongPass, setWrongPass] = useState(false);
     const [lockedLog, setLockedPass] = useState(false);
     const [time, setTime] = useState<number>(0);
+
+    const router = useRouter();
 
     const togglePassword = () => setShowPassword((prev) => !prev);
 
@@ -45,10 +50,13 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
             });
 
             if (res.status === 200) {
-            console.log("Přihlášení OK", res.data);
-            alert("Přihlášení úspěšné!");
-            setLockedPass(false);
-            setTime(0);
+                if (res.data.token) {
+                    router.push(`/pass-change?token=${res.data.token}&v=1`);
+                } else if (res.data.id) {
+                    alert("Přihlášení úspěšné!");
+                    setLockedPass(false);
+                    setTime(0);
+                }
             }
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
@@ -86,13 +94,13 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                             <span className="input-group-text bg-v-light border-v">
                                 <i className="bi bi-person-circle fs-5 px-2 text-white"></i>
                             </span>
-                            <input type="text" aria-label="Password" id="inp-user" className="form-control" placeholder="Email nebo username" value={user} onChange={e => setUser(e.target.value)} />
+                            <input type="text" aria-label="Password" className="form-control" placeholder="Email nebo username" value={user} onChange={e => setUser(e.target.value)} />
                         </div>
                         <div className="input-group mb-3 rounded-input position-rel pe-5">
                             <span className="input-group-text bg-v-light border-v">
                                 <i className="bi bi-lock-fill fs-5 px-2 text-white"></i>
                             </span>
-                            <input type={showPassword ? "text" : "password"} id="inp-user" className="form-control " placeholder="Heslo" value={pass} onChange={e => setPass(e.target.value)}/>
+                            <input type={showPassword ? "text" : "password"} className="form-control " placeholder="Heslo" value={pass} onChange={e => setPass(e.target.value)}/>
                             <button className="eye-pos" type="button" onClick={togglePassword} aria-label="Zobrazit heslo">
                                 <i className={`bi fs-2 text-secondary ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                             </button>
@@ -108,7 +116,11 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                         <p className="text-danger text-center">Tvůj účet je zablokovaný na {time} minut</p>
                     </div>
                     )}
-                    <div className="col-12 d-flex align-items-center justify-content-center">
+
+                    <div className="col-12 d-flex justify-content-center">
+                        <Link title="Žádost o změna hesla" href="/pc-req" className="text-center text-dark">Zapomenuté heslo?</Link>
+                    </div>
+                    <div className="col-12 d-flex align-items-center justify-content-center mt-2">
                         <button onClick={handleLogin} className="v-btn" type="button">Přihlásit se</button>     
                     </div>
                    <Temp_cleaner />

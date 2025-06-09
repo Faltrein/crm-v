@@ -74,6 +74,11 @@
 /*--------*/
 
 /*personal global styles*/
+
+a {
+  text-decoration: none !important;
+}
+
 h1 {
   font-size: 2rem;
 }
@@ -156,7 +161,8 @@ h1 {
 
 /*Login part*/
 #login .login-container,
-#pass_change .login-container  {
+#pass-change .login-container,
+#pc-req .login-container   {
   border: 1px solid var(--medium-black);
   border-radius: var(--rounded-table);
   max-width: 20rem;
@@ -191,11 +197,47 @@ h1 {
 }
 
 #login .vh-100,
-#pass_change .vh-100 {
+#pass-change .vh-100,
+#pc-req .vh-100 {
   width: 100%;
   height: 100vh;
 }
 
+#pc-req .go-b-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  color: var(--text-color-dark);
+  background-color: var(--bg-white);
+  border: 2px solid var(--btn-approve);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.4s ease, padding 0.4s ease;
+  padding: 0;
+  position: relative;
+}
 
+#pc-req .go-b-btn .go-b-text {
+  opacity: 0;
+  margin-left: 0.5rem;
+  transition: opacity 0.3s ease;
+  font-size: 0.9rem;
+}
 
+#pc-req .go-b-btn:hover {
+  background-color: var(--btn-approve);
+  color: var(--bg-white);
+  width: 10.5rem; 
+  padding: 0 1rem;
+  border-radius: 2rem;
+}
 
+#pc-req .go-b-btn:hover .go-b-text {
+  opacity: 1;
+}

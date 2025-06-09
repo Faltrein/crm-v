@@ -17,6 +17,7 @@ model v_login {
   locked        Boolean   @default(false)
   locked_until  DateTime? @db.DateTime(0)
   f_attempts    Int?      @default(0)
+  v_created     Boolean?  @default(false)
 }
 
 model v_zakaznici {
