@@ -13,6 +13,9 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
     const [hideCookieBar, setHideCookieBar] = useState(false);
     const [cookieVal, setCookieVal] = useState(consentValue);
     const [showCookieModal, setShowCookieModal] = useState(false);
+    const [wrongPass, setWrongPass] = useState(false);
+    const [lockedLog, setLockedPass] = useState(false);
+    const [time, setTime] = useState<number>(0);
 
     const togglePassword = () => setShowPassword((prev) => !prev);
 
@@ -23,34 +26,54 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
         } else {
             setCookieChecked(false);
         }
-        alert(consentValue);
+        
     }, [consentValue]);
 
     const handleLogin = async () => {
+        if (cookieVal !== "1") {
+            setHideCookieBar(true);
+            setShowCookieModal(false);
+            setTimeout(() => setShowCookieModal(true), 10);
+            return;
+        }
 
-        if (cookieVal === "1") {
-            alert("time to handle login");
-            /*try {
-            const res = await axios.post("/api/login", {
-                user,
-                pass,
+        try {
+            const res = await axios.post("/api/login_router", {
+            action: "login",
+            user,
+            pass,
             });
-        
+
+            if (res.status === 200) {
             console.log("Přihlášení OK", res.data);
             alert("Přihlášení úspěšné!");
-            // Zde můžeš přesměrovat nebo uložit session/token atd.
-            } catch (err: any) {
-            console.error("Chyba při přihlášení:", err);
-            alert(err.response?.data?.error || "Přihlášení selhalo");
-            }*/
-        } else {
-            setShowCookieModal(false);
-            setTimeout(() => {
-                setShowCookieModal(true);
-            }, 10);
-        }
-      };
+            setLockedPass(false);
+            setTime(0);
+            }
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                // error je typu AxiosError, můžeš bezpečně přistupovat k error.response apod.
+                if (error.response?.status === 423) {
+                setLockedPass(true);
 
+                const lockedUntilStr = error.response.data.locked_until;
+                if (lockedUntilStr) {
+                    const lockedUntil = new Date(lockedUntilStr);
+                    const now = new Date();
+                    const diffMs = lockedUntil.getTime() - now.getTime();
+                    const diffMin = Math.ceil(diffMs / 1000 / 60);
+                    setTime(diffMin > 0 ? diffMin : 0);
+                }
+                } else {
+                    setLockedPass(false);
+                    setWrongPass(true);
+                }
+            } else {
+                setLockedPass(false);
+                setWrongPass(true);
+            }
+        }
+    };
     return (
         <>
             <div className={`container-fluid ${hideCookieBar ? "vh-100" : "vh-60"} d-flex align-items-center justify-content-center`}>
@@ -75,6 +98,16 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                             </button>
                         </div>
                     </div>
+                    {wrongPass && !lockedLog &&(
+                    <div className="col-12">
+                        <p className="text-danger text-center">Nesprávné heslo nebo jméno</p>
+                    </div>
+                    )}
+                    {lockedLog &&(
+                    <div className="col-12">
+                        <p className="text-danger text-center">Tvůj účet je zablokovaný na {time} minut</p>
+                    </div>
+                    )}
                     <div className="col-12 d-flex align-items-center justify-content-center">
                         <button onClick={handleLogin} className="v-btn" type="button">Přihlásit se</button>     
                     </div>
@@ -139,3 +172,4 @@ const Login_modal = ({open, setHideCookieBar, setCookieVal} : LoginModalType) =>
       </Modal>
     );
 }
+

@@ -11,7 +11,7 @@ export async function generateMetadata() {
 export default async function Home() {
   const podminka = 1;
   const cookieStore = await cookies();
-  const allCookies = cookieStore.getAll();
+  //const allCookies = cookieStore.getAll();
   const cookiesConsent = cookieStore.get("cookieConsent");
   let consentValue = cookiesConsent?.value;
 

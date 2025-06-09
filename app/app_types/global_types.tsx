@@ -13,3 +13,9 @@ export type CookieHandlerType = {
     setHideCookieBar: (value: boolean) => void;
     setCookieVal: (value: string) => void;
 }
+
+export type UpdateData = {
+  f_attempts: number;
+  locked?: boolean;
+  locked_until?: Date | null;
+};

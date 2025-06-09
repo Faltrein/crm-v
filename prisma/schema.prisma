@@ -13,4 +13,23 @@ model v_login {
   username      String?   @db.VarChar(100)
   password_hash String    @db.VarChar(255)
   created_at    DateTime? @default(now()) @db.Timestamp(0)
+  z_id          Int?
+  locked        Boolean   @default(false)
+  locked_until  DateTime? @db.DateTime(0)
+  f_attempts    Int?      @default(0)
+}
+
+model v_zakaznici {
+  id         Int     @id @default(autoincrement())
+  z_id       Int
+  z_name     String? @db.VarChar(40)
+  z_surename String? @db.VarChar(40)
+  z_mail     String? @db.VarChar(50)
+  z_mail_2   String? @db.VarChar(50)
+  z_phone    String? @db.VarChar(30)
+  z_phone_2  String? @db.VarChar(30)
+  z_to_pay   Int?
+  z_payed    Int?
+  z_owner    String? @db.VarChar(50)
+  z_type     String? @db.VarChar(50)
 }
