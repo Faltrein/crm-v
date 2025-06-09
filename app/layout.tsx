@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import { cookies } from "next/headers";
+import { Crm_body } from "./page_folders/crm_body/Crm_body";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -19,17 +20,38 @@ export const metadata: Metadata = {
   description: "Vytvořeno webdevoloperem Venca-dev",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let podminka: number;
+  const cookieStore = await cookies();
+  const zak_id = cookieStore.get("zak_id");
+
+  if (zak_id && zak_id.value) {
+    podminka = 0;
+  } else {
+    podminka = 1;
+  }
   return (
     <html lang="cs">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <>
+              {podminka === 1 ? children : 
+                <div className="row g-0">
+                  <div className="col-3">
+                    <Crm_body />
+                  </div>
+                  <div className="col-9">
+                    {children}
+                  </div>
+                </div>
+              }
+            </>
+        
       </body>
     </html>
   );

@@ -1,7 +1,16 @@
-import { Login } from "./page_folders/uvod/login";
+
+import { Login } from "./page_folders/uvod_login/login";
 import { cookies } from 'next/headers';
 export async function generateMetadata() {
-  const podminka = 1;
+   let podminka:number;
+    const cookieStore = await cookies();
+    const zak_id = cookieStore.get("zak_id");
+    
+    if (zak_id && zak_id.value) {
+      podminka = 0;
+    } else {
+      podminka = 1;
+    }
 
   return {
     title: podminka === 1 ? "Login – Crm-v" : "Crm-v Úvod",
@@ -9,9 +18,16 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const podminka = 1;
+  let podminka:number;
   const cookieStore = await cookies();
-  //const allCookies = cookieStore.getAll();
+  const zak_id = cookieStore.get("zak_id");
+
+  if (zak_id && zak_id.value) {
+    podminka = 0;
+  } else {
+    podminka = 1;
+  }
+  console.log('podminka je ' + podminka);
   const cookiesConsent = cookieStore.get("cookieConsent");
   let consentValue = cookiesConsent?.value;
 
@@ -21,7 +37,8 @@ export default async function Home() {
   console.log('cookie consent', consentValue);
   return (
     <>
-      {podminka === 1 ? <Login consentValue={consentValue}/> : <div className="text-primary">Něco jiného</div>}
+      {podminka === 1 ? <Login consentValue={consentValue}/> : 
+      ""}
     </>
   );
 }

@@ -41,3 +41,7 @@ export const getCookie = (name: string): string | null => {
   }
   return null;
 };
+
+export const addToCookie = (name: string, value: string, maxAgeSeconds: number): void => {
+  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}`;
+};

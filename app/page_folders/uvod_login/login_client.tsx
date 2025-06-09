@@ -1,7 +1,7 @@
 "use client"
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { handleCookie, Temp_cleaner } from "@/app/venca_lib/venca_lib";
+import { addToCookie, handleCookie} from "@/app/venca_lib/venca_lib";
 import { CookiesLoginType, LoginModalType } from "@/app/app_types/global_types";
 import { Modal } from "react-bootstrap";
 import Link from "next/link";
@@ -18,6 +18,8 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
     const [showCookieModal, setShowCookieModal] = useState(false);
     const [wrongPass, setWrongPass] = useState(false);
     const [lockedLog, setLockedPass] = useState(false);
+    const [stayLogged, setStayLogged] = useState(false);
+
     const [time, setTime] = useState<number>(0);
 
     const router = useRouter();
@@ -33,6 +35,10 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
         }
         
     }, [consentValue]);
+
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setStayLogged(e.target.checked); 
+    };
 
     const handleLogin = async () => {
         if (cookieVal !== "1") {
@@ -53,9 +59,16 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                 if (res.data.token) {
                     router.push(`/pass-change?token=${res.data.token}&v=1`);
                 } else if (res.data.id) {
-                    alert("Přihlášení úspěšné!");
                     setLockedPass(false);
                     setTime(0);
+                    if(stayLogged) {
+                        addToCookie("zak_id", res.data.id, 86400);
+                        window.location.reload();
+                    } else {
+                        addToCookie("zak_id", res.data.id, 2592000);
+                        window.location.reload();
+                    }
+                    //
                 }
             }
         } catch (error: unknown) {
@@ -115,15 +128,24 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                     <div className="col-12">
                         <p className="text-danger text-center">Tvůj účet je zablokovaný na {time} minut</p>
                     </div>
-                    )}
-
+                    )}                  
+                    
                     <div className="col-12 d-flex justify-content-center">
+                        <div className="form-check">
+                            <input className="form-check-input" type="checkbox" value="" id="stay-logged" checked={stayLogged} onChange={handleCheckboxChange}/>
+                            <label className="form-check-label" htmlFor="stay-logged">
+                                Zůstat příhlášený
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="col-12 d-flex justify-content-center mt-2">
                         <Link title="Žádost o změna hesla" href="/pc-req" className="text-center text-dark">Zapomenuté heslo?</Link>
                     </div>
+
                     <div className="col-12 d-flex align-items-center justify-content-center mt-2">
                         <button onClick={handleLogin} className="v-btn" type="button">Přihlásit se</button>     
                     </div>
-                   <Temp_cleaner />
                 </div>
                 <Login_modal open={showCookieModal} setHideCookieBar={setHideCookieBar} setCookieVal={setCookieVal}/>
             </div>
