@@ -69,7 +69,7 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                     setWrongPass(true);
                 }
             } else {
-                setLockedPass(false);
+                // Jiný typ chyby než AxiosError
                 setWrongPass(true);
             }
         }
