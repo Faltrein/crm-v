@@ -44,7 +44,7 @@ export const Pass_change_client = () => {
         const diffMs = now - tokenTimestamp;
         const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
-        if (diffMinutes > 100) {
+        if (diffMinutes > 30) {
             setTokenExpired(true);
         }
 

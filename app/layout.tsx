@@ -41,11 +41,11 @@ export default async function RootLayout({
       >
         <>
               {podminka === 1 ? children : 
-                <div className="row g-0">
-                  <div className="col-3">
-                    <Crm_body />
+                <div className="container-fluid row g-0 mx-auto">
+                  <div className="col-12 col-xl-3 col-xxl-2">
+                    <Crm_body zak_id={zak_id}/>
                   </div>
-                  <div className="col-9">
+                  <div className="col-12 col-xl-9 col-xxl-10">
                     {children}
                   </div>
                 </div>

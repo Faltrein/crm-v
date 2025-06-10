@@ -27,8 +27,8 @@ export const Pc_req_client = () => {
             <div className="login-container">
                 <div className="row g-0 p-3">
                     <div className="col-12">
-                        <Link title="zpět na v-crm login" href="/" className="go-b-btn ps-1 pb-1" >
-                            <i className="bi bi-arrow-left-short fs-2 ms-1px"></i>
+                        <Link title="zpět na v-crm login" href="/" className="go-b-btn" >
+                            <i className="bi bi-arrow-left-short fs-2 ms-2px mb-2px"></i>
                             <span className="go-b-text">Zpět k přihlášení</span>
                         </Link>
                     </div>

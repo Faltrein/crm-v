@@ -1,4 +1,9 @@
+"use client";
 import { CookieHandlerType } from "../app_types/global_types";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import { ActiveLinkType } from "./venca_lib_types";
 
 export const Temp_cleaner = () => {
     return (
@@ -44,4 +49,17 @@ export const getCookie = (name: string): string | null => {
 
 export const addToCookie = (name: string, value: string, maxAgeSeconds: number): void => {
   document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=${maxAgeSeconds}`;
+};
+
+export const ActiveLink = ({href, children, className = "", activeClassName = "active-link",
+}: ActiveLinkType) => { 
+  const pathname = usePathname();
+  const isActive = pathname === href;
+  const combinedClass = `${className} ${isActive ? activeClassName : ""}`.trim();
+
+  return (
+    <Link href={href} className={`px-3 py-2 text-center text-dark ${combinedClass}`}>
+      {children}
+    </Link>
+  );
 };
