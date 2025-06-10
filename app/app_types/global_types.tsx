@@ -34,3 +34,7 @@ export type CrmBodyClientTypes = {
 export type CrmLinksType = {
   z_type: string;
 }
+
+export type AccountLeaveType = {
+  acc_type: string;
+}

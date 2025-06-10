@@ -19,7 +19,7 @@ export const Crm_body_client = ({crm_data} : CrmBodyClientTypes) => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="flex-row flex-xl-column w-100">
-                    <Navbar.Brand className="d-none d-xl-flex display-3 p-3 align-items-center justify-content-center ms-3" href="/account">
+                    <Navbar.Brand className="d-none d-xl-flex display-3 mb-4 p-3 align-items-center justify-content-center ms-3" href="/account">
                         CRM-V {crm_data?.z_name} {crm_data?.z_surename}
                         <Image src="basic-profile.jpg" className="ms-3 profile-pic" alt="profilový obrázek"/>
                     </Navbar.Brand>

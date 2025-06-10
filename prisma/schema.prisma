@@ -21,16 +21,21 @@ model v_login {
 }
 
 model v_zakaznici {
-  id         Int     @id @default(autoincrement())
-  z_id       Int
-  z_name     String? @db.VarChar(40)
-  z_surename String? @db.VarChar(40)
-  z_mail     String? @db.VarChar(50)
-  z_mail_2   String? @db.VarChar(50)
-  z_phone    String? @db.VarChar(30)
-  z_phone_2  String? @db.VarChar(30)
-  z_to_pay   Int?
-  z_payed    Int?
-  z_owner    String? @db.VarChar(50)
-  z_type     String? @db.VarChar(50)
+  id          Int     @id @default(autoincrement())
+  z_id        Int
+  z_name      String? @db.VarChar(40)
+  z_surename  String? @db.VarChar(40)
+  z_mail      String? @db.VarChar(50)
+  z_mail_2    String? @db.VarChar(50)
+  z_phone     String? @db.VarChar(30)
+  z_phone_2   String? @db.VarChar(30)
+  z_to_pay    Int?
+  z_payed     Int?
+  z_owner     String? @db.VarChar(50)
+  z_type      String? @db.VarChar(50)
+  z_adress    String? @db.VarChar(50)
+  z_city      String? @db.VarChar(50)
+  z_obcanstvi String? @db.VarChar(50)
+  z_state     String? @db.VarChar(50)
+  z_psc       String? @db.VarChar(50)
 }

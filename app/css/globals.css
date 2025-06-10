@@ -105,9 +105,33 @@ a {
   text-decoration: none !important;
 }
 
-h1 {
-  font-size: 2rem;
+.text-1 {
+  font-size: 2.2rem !important;
 }
+
+.text-2 {
+  font-size: 2rem !important;
+}
+
+.text-3 {
+  font-size: 1.6rem !important;
+}
+
+.text-4 {
+  font-size: 1.3rem !important;
+}
+
+.text-5 {
+  font-size: 1rem !important;
+}
+
+.text-6 {
+  font-size: 0.8rem !important;
+}
+.text-7 {
+  font-size: 0.7rem !important;
+}
+
 
 .container-fluid {
   max-width: 2000px;
@@ -314,4 +338,13 @@ h1 {
   #crm-body .nav-border {
     box-shadow: 0px 4px 7px 1px var(--v-rbga);
   }
+}
+
+/* ------- */
+
+/* Crm account part */
+#account .profile-pic {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
 }

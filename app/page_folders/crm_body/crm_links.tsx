@@ -9,9 +9,10 @@ export const Crm_link = ({z_type} : CrmLinksType) => {
         case z_type = "admin":
             return (
                 <>
-                    <ActiveLink href="/home">Domovská stránka</ActiveLink>
+                    <ActiveLink href="/">Domovská stránka</ActiveLink>
                     <ActiveLink href="/zakaznici">Zákazníci</ActiveLink>
                     <ActiveLink href="/firma">Moje firma</ActiveLink>
+                    <ActiveLink href="/web">Můj web</ActiveLink>
                     <ActiveLink href="/dane">Daně</ActiveLink>
                     <ActiveLink href="/to-do">To do list</ActiveLink>
                     <ActiveLink href="/zamestnanci">Zaměstnanci</ActiveLink>

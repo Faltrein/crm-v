@@ -3,7 +3,8 @@ import { CookieHandlerType } from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { ActiveLinkType } from "./venca_lib_types";
+import { ActiveLinkType, Col_6Type } from "./venca_lib_types";
+import  Col  from "react-bootstrap/Col";
 
 export const Temp_cleaner = () => {
     return (
@@ -63,3 +64,16 @@ export const ActiveLink = ({href, children, className = "", activeClassName = "a
     </Link>
   );
 };
+
+export const Col_6 = ({className, text_1, text_2} : Col_6Type) => {
+  return (
+    <>
+      <Col xs="6" className={className}>
+        {text_1}
+      </Col>
+      <Col xs="6" className={className}>
+        {text_2}
+      </Col>
+    </>
+  );
+}
