@@ -1,5 +1,6 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { v_zakaznici } from "@prisma/client";
+import { ReactNode } from "react";
 
 export type CookiesLoginType = {
     consentValue: string;
@@ -38,3 +39,7 @@ export type CrmLinksType = {
 export type AccountLeaveType = {
   acc_type: string;
 }
+
+export type SubNavbarType = {
+  subnav?: ReactNode;
+};

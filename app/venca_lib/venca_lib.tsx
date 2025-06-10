@@ -2,7 +2,7 @@
 import { CookieHandlerType } from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, {createContext, useState, useContext} from "react";
 import { ActiveLinkType, Col_6Type } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
 
@@ -77,3 +77,32 @@ export const Col_6 = ({className, text_1, text_2} : Col_6Type) => {
     </>
   );
 }
+
+
+/*todo*/
+type AccordionContextType = {
+  activeKey: string | null;
+  toggle: () => void;
+};
+
+const AccordionContext = createContext<AccordionContextType | undefined>(undefined);
+
+export const AccordionProvider = ({ children }: { children: React.ReactNode }) => {
+  const [activeKey, setActiveKey] = useState<string | null>(null);
+
+  const toggle = () => {
+    setActiveKey((prev) => (prev === "0" ? null : "0")); // Toggle první accordion item
+  };
+
+  return (
+    <AccordionContext.Provider value={{ activeKey, toggle }}>
+      {children}
+    </AccordionContext.Provider>
+  );
+};
+
+export const useAccordion = () => {
+  const context = useContext(AccordionContext);
+  if (!context) throw new Error("useAccordion must be used within AccordionProvider");
+  return context;
+};

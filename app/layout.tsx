@@ -5,6 +5,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { cookies } from "next/headers";
 import { Crm_body } from "./page_folders/crm_body/Crm_body";
+import SubNavbar from "./page_folders/crm_body/subnavbar";
+import ClientReduxProvider from "./client_redux_provider";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -34,6 +38,7 @@ export default async function RootLayout({
   } else {
     podminka = 1;
   }
+
   return (
     <html lang="cs">
       <body
@@ -41,14 +46,17 @@ export default async function RootLayout({
       >
         <>
               {podminka === 1 ? children : 
-                <div className="container-fluid row g-0 mx-auto">
-                  <div className="col-12 col-xl-3 col-xxl-2">
-                    <Crm_body zak_id={zak_id}/>
+                <ClientReduxProvider>
+                  <div className="container-fluid row g-0 mx-auto">
+                    <div className="col-12 col-xl-3 col-xxl-2">
+                      <SubNavbar />
+                      <Crm_body zak_id={zak_id} />
+                    </div>
+                    <div className="col-12 col-xl-9 col-xxl-10">
+                      {children}
+                    </div>
                   </div>
-                  <div className="col-12 col-xl-9 col-xxl-10">
-                    {children}
-                  </div>
-                </div>
+                </ClientReduxProvider>
               }
             </>
         
