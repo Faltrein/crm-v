@@ -45,7 +45,7 @@ export const ZakazniciPage = () => {
     }
   }, [diffAcc]);
 
-  const isSubnavOpen = useAppSelector(state => state.accordion.isSubnavOpen);
+  const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
   return (
     <div className="p-3" style={{ marginTop: isSubnavOpen ? "5rem" : "0" }}>
       <h1>Zákazníci</h1>

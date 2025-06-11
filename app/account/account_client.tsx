@@ -7,11 +7,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Col_6 } from "../venca_lib/venca_lib";
 import Link from "next/link";
+import { useAppSelector } from "../redux-store/hooks";
+
 
 export const Account_client = ({crm_data} : CrmBodyClientTypes) => {
-    
+        const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
     return(
-        <Container fluid>
+        <Container fluid className={isSubnavOpen ? "margin-pro-redux" : ""}>
             <Row className="g-0">
                 <Col xs="12" xl="8">
                     <h1 className="display-1">Account CRM-V uživatele {crm_data?.z_name} {crm_data?.z_surename}</h1>

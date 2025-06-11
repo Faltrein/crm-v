@@ -227,6 +227,10 @@ a {
   z-index: 5000;
   overflow: visible;
 }
+
+.margin-pro-redux {
+  margin-top: 3.5rem;
+}
 /*----------*/
 
 
@@ -406,18 +410,25 @@ a {
 #subnavbar .open-sub-btn:hover .open-sub-text {
   opacity: 1;
 }
+#subnavbar .arrow-in-btn {
+  margin-left: 4px;
+  display: flex;
+}
 
+#subnavbar .open-sub-btn:hover .arrow-in-btn {
+  display: none;
+}
 .subnav-container {
   position: fixed;
   top: 0;
   left: 100vw; /* začíná mimo obrazovku vpravo */
   width: 75vw;
   background-color: var(--bg-white);
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   box-shadow: 0 4px 12px var(--v-rbga);
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
   
   transition: left 0.4s ease-in-out; /* animace */
 }
