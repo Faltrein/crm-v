@@ -59,7 +59,7 @@ export const ActiveLink = ({href, children, className = "", activeClassName = "a
   const combinedClass = `${className} ${isActive ? activeClassName : ""}`.trim();
 
   return (
-    <Link href={href} className={`px-3 py-2 text-center text-dark ${combinedClass}`}>
+    <Link href={href} className={`px-3 py-2 text-center link-text ${combinedClass}`}>
       {children}
     </Link>
   );

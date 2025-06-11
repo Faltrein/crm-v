@@ -43,3 +43,7 @@ export type AccountLeaveType = {
 export type SubNavbarType = {
   subnav?: ReactNode;
 };
+
+export type SubNavClassType = {
+  className: string;
+}

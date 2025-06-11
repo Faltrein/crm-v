@@ -231,6 +231,18 @@ a {
 .margin-pro-redux {
   margin-top: 3.5rem;
 }
+
+.w-90 {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+@media (max-width:992px) {
+  .sticky-nav-body {
+    width: 100%;
+  }
+}
 /*----------*/
 
 
@@ -338,12 +350,22 @@ a {
 }
 
 #crm-body .vh-100 {
+  margin-top: 4.1rem;
   width: 100%;
   height: 90vh;
+  z-index: 500;
+}
+#crm-body .link-text {
+  color: var(--text-color-dark);
 }
 
+#crm-body .v-bg {
+  background-color: var(--bg-white);
+  margin-top: 0rem;
+}
 @media (max-width:992px) {
   #crm-body .vh-100 {
+  margin-top: 0;
   width: 100%;
   height: 5rem !important;
   }
@@ -352,10 +374,25 @@ a {
     box-shadow: 0px 4px 7px 1px var(--v-rbga);
     
   }
+
+  #crm-body .link-text {
+    color: var(--text-color-white);
+  }
+
+  #crm-body .v-bg {
+    background-color: var(--v-rbga);
+    margin-top: 0.4rem !important;
+    z-index: 500;
+  }
+
 }
 
+
 #subnavbar .vh-10 {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 25.8vw;
   height: 10vh;
 }
 
@@ -418,7 +455,7 @@ a {
 #subnavbar .open-sub-btn:hover .arrow-in-btn {
   display: none;
 }
-.subnav-container {
+#subnavbar .subnav-container {
   position: fixed;
   top: 0;
   left: 100vw; /* začíná mimo obrazovku vpravo */
@@ -433,9 +470,50 @@ a {
   transition: left 0.4s ease-in-out; /* animace */
 }
 
-.subnav-container.active {
+#subnavbar .subnav-container.active {
   left: 26%; /* viditelná pozice */
   box-shadow: 7px 0px 7px 1px var(--v-rbga);
+}
+
+
+@media (max-width:992px) {
+ /* #subnavbar .subnav-container {
+    top: 30;
+  }
+
+  #crm-body .vh-10 {
+    top: 30;
+    
+  }*/
+   #subnavbar .vh-10 {
+    position: fixed;
+    width: 100%;
+    height: 4vh !important;
+    background-color: var(--btn-approve);
+    transition: top 0.4s ease-in-out;
+  }
+
+  #subnavbar .vh-10.top-default {
+    top: 5rem;
+  }
+
+  #subnavbar .vh-10.top-shifted {
+    z-index: 1;
+    top: 8.7rem;
+  }
+
+  #subnavbar .subnav-container {
+    top: -100vh; /* schované nad obrazovkou */
+    left: 0;
+    width: 100vw !important;
+    transition: top 0.4s ease-in-out !important;
+  }
+
+  #subnavbar .subnav-container.active {
+    top: 5rem; /* sjede dolů */
+    left: 0%;
+  }
+
 }
 /* ------- */
 

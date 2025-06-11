@@ -11,7 +11,7 @@ export const Crm_body = async ({zak_id} : ZakanikId) => {
     }
     const crm_data = await loggedZak(zak_id.value);
     return (
-        <section id="crm-body">
+        <section id="crm-body" className="w-100">
             <Crm_body_client crm_data={crm_data}/>
         </section>
     )

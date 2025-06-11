@@ -37,11 +37,11 @@ export const SubNawbar_client = () => {
   return (
     <>
       {/* Horní panel */}
-      <div className="vh-10 nav-border d-flex align-items-center justify-content-between px-3">
-        <Button className="logout-btn" onClick={() => logout()}>
+      <div className={`vh-10 ${isOpen ? "top-shifted" : "top-default"} nav-border d-flex align-items-center justify-content-between px-3`}>
+        <Button className="logout-btn d-none d-xl-flex" onClick={() => logout()}>
           Odhlásit
         </Button>
-        <Button className="open-sub-btn" onClick={toggleSubnav}>
+        <Button className="open-sub-btn d-none d-xl-flex" onClick={toggleSubnav}>
           {!isOpen && (
              <i className="bi bi-arrow-right-short ms-1 fs-3"></i>
           )}
@@ -56,6 +56,15 @@ export const SubNawbar_client = () => {
             <i className="bi bi-arrow-left-short fs-3"></i>
           )}
         </Button>
+        <button className="d-flex d-xl-none w-100 d-flex align-items-center justify-content-center" onClick={toggleSubnav}>
+          {isOpen ? (
+              <i className="bi bi-caret-up-fill text-white"></i>
+            ) : (
+              <i className="bi bi-caret-down-fill text-white"></i>
+            )}
+        </button>
+
+        
       </div>
 
       {/* Vytáhnutý subnav mimo layout */}
