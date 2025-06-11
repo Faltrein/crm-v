@@ -7,6 +7,7 @@
   --rounded-table: 10px;
   --rounded-btn: 25px;
   --btn-approve: #4b12a5;
+  --btn-logout: #530000;
   --bg-v-light: #651cda;
   --text-color-dark: #181818;
   --text-color-white: #fff;
@@ -219,6 +220,13 @@ a {
   color: var(--bg-white);
 }
 
+.sticky-nav-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+  overflow: visible;
+}
 /*----------*/
 
 
@@ -320,13 +328,14 @@ a {
   outline: none;
 }
 
-#crm-body .nav-border {
+#crm-body .nav-border,
+#subnavbar .nav-border {
   box-shadow: 2px 0px 7px 1px var(--v-rbga);
 }
 
 #crm-body .vh-100 {
   width: 100%;
-  height: 100vh;
+  height: 90vh;
 }
 
 @media (max-width:992px) {
@@ -337,9 +346,86 @@ a {
 
   #crm-body .nav-border {
     box-shadow: 0px 4px 7px 1px var(--v-rbga);
+    
   }
 }
 
+#subnavbar .vh-10 {
+  width: 100%;
+  height: 10vh;
+}
+
+#subnavbar .logout-btn {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: var(--rounded-btn);
+  border: 2px solid var(--btn-logout);
+  background-color: var(--btn-logout);
+  color: var(--text-color-white);
+}
+
+#subnavbar .logout-btn:hover {
+  background-color: var(--foreground);
+}
+
+#subnavbar .open-sub-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 25px;
+  color: var(--text-color-dark);
+  background-color: var(--bg-white);
+  border: 2px solid var(--btn-approve);
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.4s ease, padding 0.4s ease;
+  padding: 0;
+  position: relative;
+  direction: rtl; 
+}
+
+#subnavbar .open-sub-btn .open-sub-text {
+  opacity: 0;
+  margin-right: 0.5rem;
+  transition: opacity 0.3s ease;
+  font-size: 0.9rem;
+}
+
+#subnavbar .open-sub-btn:hover {
+  background-color: var(--btn-approve);
+  color: var(--bg-white);
+  width: 10.5rem;
+  padding: 0 1rem;
+  border-radius: 2rem;
+}
+
+#subnavbar .open-sub-btn:hover .open-sub-text {
+  opacity: 1;
+}
+
+.subnav-container {
+  position: fixed;
+  top: 0;
+  left: 100vw; /* začíná mimo obrazovku vpravo */
+  width: 75vw;
+  background-color: var(--bg-white);
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  box-shadow: 0 4px 12px var(--v-rbga);
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  transition: left 0.4s ease-in-out; /* animace */
+}
+
+.subnav-container.active {
+  left: 26%; /* viditelná pozice */
+  box-shadow: 7px 0px 7px 1px var(--v-rbga);
+}
 /* ------- */
 
 /* Crm account part */

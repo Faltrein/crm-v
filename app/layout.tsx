@@ -49,8 +49,10 @@ export default async function RootLayout({
                 <ClientReduxProvider>
                   <div className="container-fluid row g-0 mx-auto">
                     <div className="col-12 col-xl-3 col-xxl-2">
-                      <SubNavbar />
-                      <Crm_body zak_id={zak_id} />
+                      <div className="sticky-nav-body">
+                        <SubNavbar />
+                        <Crm_body zak_id={zak_id} />
+                      </div>
                     </div>
                     <div className="col-12 col-xl-9 col-xxl-10">
                       {children}
