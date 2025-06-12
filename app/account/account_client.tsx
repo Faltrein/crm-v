@@ -2,11 +2,12 @@
 import React, {useState, useEffect} from "react";
 import { AccountLeaveType, CrmBodyClientTypes } from "../app_types/global_types";
 import { Accordion, Image, Container,Row, Col, FloatingLabel, Form} from "react-bootstrap";
-import { Col_6, MaxDropdown, PhonePrefixSelect } from "../venca_lib/venca_lib";
+import { Col_6, getCookie, MaxDropdown, PhonePrefixSelect } from "../venca_lib/venca_lib";
 import Link from "next/link";
 import { useAppSelector } from "../redux-store/hooks";
 import { useDispatch } from "react-redux";
 import { toggleAdresa, toggleHesla, toggleKontakt } from "../redux-store/accountSlice";
+import axios from "axios";
 
 export const AccountSubnavClient = () => {
     const dispatch = useDispatch()
@@ -36,7 +37,7 @@ export const AccountSubnavClient = () => {
     );
 }
 
-export const Account_client = ({crm_data} : CrmBodyClientTypes) => {
+export const Account_client = ({crm_data, predvolby, staty, p_hash} : CrmBodyClientTypes) => {
     //toto načítá server zde propojujeme react componenty
     const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
     const activeHesla = useAppSelector(state => state.account.hesla);
@@ -48,9 +49,9 @@ export const Account_client = ({crm_data} : CrmBodyClientTypes) => {
             <Row className="g-0">
                 <Col xs="12" xl="8">
                     <h1 className="display-1">Account CRM-V uživatele {crm_data?.z_name} {crm_data?.z_surename}</h1>
-                    <Hesla crm_data={crm_data} activeKey={activeHesla}/>
-                    <Kontakty crm_data={crm_data} activeKey={activeKontakt}/>
-                    <Adresa_client crm_data={crm_data} activeKey={activeAdresa}/>
+                    <Hesla crm_data={crm_data} activeKey={activeHesla}  p_hash={p_hash}/>
+                    <Kontakty crm_data={crm_data} activeKey={activeKontakt} predvolby={predvolby}/>
+                    <Adresa_client crm_data={crm_data} activeKey={activeAdresa} staty={staty}/>
                 </Col>
                 <Col xs="12" xl="4">
                     <Profile_card crm_data={crm_data}/>
@@ -60,12 +61,62 @@ export const Account_client = ({crm_data} : CrmBodyClientTypes) => {
     );
 }
 
-const Hesla = ({crm_data, activeKey} : CrmBodyClientTypes) => {
+const Hesla = ({ activeKey} : CrmBodyClientTypes) => {
     const dispatch = useDispatch();
 
     const toggleHeslaAcc = () => {
         dispatch(toggleHesla());
     }
+
+    const [passNoMatch, setPassNoMatch] = useState(false);
+    const [isTooShort, setIsTooShort] = useState(false);
+    const [noLetter, setNoLetter] = useState(false);
+    const [newPass, setNewPass] = useState("");
+    const [newPassControl, setNewPassControl] = useState("");
+    const [actualPass, setActuallPass] = useState("");
+    const [passControl, setPassControl] = useState(false);
+    const [saved, setSaved] = useState(false);
+    
+    useEffect(() => {
+        setIsTooShort(newPass.length < 6);
+    
+        setNoLetter(!/[A-Z]/.test(newPass) || newPass.length === 0);
+    
+        setPassNoMatch(newPass !== newPassControl);
+    }, [newPass, newPassControl]);
+
+   
+
+    const zmenitHeslo = async () => {
+        if (passNoMatch || noLetter || isTooShort) {
+            return;
+        }
+        const zak_id = getCookie("zak_id");
+        if (!zak_id) {
+            return;
+        }
+
+        const res = await fetch("/api/account_router", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            action: "changePasswordAccount",
+            zak_id,
+            actualPass,
+            newPass,
+            }),
+        });
+
+        const data = await res.json();
+        console.log('data', data);
+        if (!data.valid) {
+            setPassControl(true);
+            setSaved(false);
+        } else {
+            setSaved(true);
+            setPassControl(false);
+        }
+    };
     return (
         <Row className="pe-4">
             <Col xs="12">
@@ -76,18 +127,40 @@ const Hesla = ({crm_data, activeKey} : CrmBodyClientTypes) => {
                             <Row xs="12">
                                 <Col xs="12">
                                      <FloatingLabel controlId="heslo-puvodni" label="Původní heslo">
-                                        <Form.Control type="password" placeholder="Původní heslo" />
+                                        <Form.Control value={actualPass} onChange={e => setActuallPass(e.target.value)} type="password" placeholder="Původní heslo" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <FloatingLabel controlId="nove-heslo" label="Nové heslo">
-                                        <Form.Control type="password" placeholder="Nové heslo" />
+                                        <Form.Control value={newPassControl} onChange={e => setNewPassControl(e.target.value)} type="password" placeholder="Nové heslo" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <FloatingLabel controlId="nove-heslo-kontrola" label="Nové heslo">
-                                        <Form.Control type="password" placeholder="Nové heslo" />
+                                        <Form.Control value={newPass} onChange={e => setNewPass(e.target.value)} type="password" placeholder="Nové heslo" />
                                     </FloatingLabel>
+                                </Col>
+                                <Col xs="12" className="mt-3 ">
+                                    {passControl && (
+                                        <div className="text-center text-danger bold">Špatně zadané původní heslo</div>
+                                    )}
+                                    {isTooShort && (
+                                        <div className="text-center text-danger">Heslo musí mít alespoň 6 znaků.</div>
+                                    )}
+                                    {noLetter && (
+                                        <div className="text-center text-danger">Heslo musí obsahovat alespoň jedno velké písmeno.</div>
+                                    )}
+                                    {passNoMatch && (
+                                        <div className="text-center text-danger">Hesla se neschodují.</div>
+                                    )}
+                                    {saved && (
+                                        <div className="d-flex align-items-center justify-content-center">
+                                            <strong className="text-center">Heslo úspěšně změněno</strong>¨
+                                        </div>
+                                    )}
+                                    <div className="d-flex align-items-center mt-3 justify-content-center">
+                                        <button className="v-btn" onClick={()=>zmenitHeslo()}>Uložit heslo</button>
+                                    </div>
                                 </Col>
                             </Row>
                         </Accordion.Body>
@@ -98,7 +171,7 @@ const Hesla = ({crm_data, activeKey} : CrmBodyClientTypes) => {
     );
 }
 
-const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
+const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
     const dispatch = useDispatch();
 
     const toggleKontaktAcc = () => {
@@ -153,7 +226,7 @@ const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <div className="input-group">
-                                        <PhonePrefixSelect value={prefix} onChange={handlePhoneChange} />
+                                        <PhonePrefixSelect value={prefix} onChange={handlePhoneChange} predvolby={predvolby}/>
                                         
                                         <FloatingLabel controlId="prvni-tel" label="První telefon" className="flex-grow-1">
                                         <Form.Control
@@ -169,7 +242,7 @@ const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
 
                                 <Col xs="12" lg="6" className="mt-3">
                                     <div className="input-group">
-                                        <PhonePrefixSelect value={secondPrefix} onChange={handleSecondPhonePref} />
+                                        <PhonePrefixSelect value={secondPrefix} onChange={handleSecondPhonePref} predvolby={predvolby}/>
                                         
                                         <FloatingLabel controlId="druhy-tel" label="Druhý telefon" className="flex-grow-1">
                                         <Form.Control
@@ -191,7 +264,7 @@ const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
     );
 }
 
-const Adresa_client = ({crm_data, activeKey} : CrmBodyClientTypes) => {
+const Adresa_client = ({crm_data, activeKey, staty, p_hash} : CrmBodyClientTypes) => {
 
     const dispatch = useDispatch();
 
@@ -199,12 +272,68 @@ const Adresa_client = ({crm_data, activeKey} : CrmBodyClientTypes) => {
         dispatch(toggleAdresa());
     }
 
-    const [stateVal, setStateVal] = useState("+420");
+    const [stateVal, setStateVal] = useState("10");
     const handleStateChange = (value: string | null) => {
         if (value !== null) {
             setStateVal(value);
         }
     };
+
+    const [obcanstviVal, setObcanstviVal] = useState("10");
+    const handleObcanstviVal = (value: string | null) => {
+        if (value !== null) {
+            setObcanstviVal(value);
+        }
+    };
+
+    const [mesto, setMesto] = useState(crm_data?.z_city || "");
+    const [ulice, setUlice] = useState(crm_data?.z_adress || "");
+    const [psc, setPsc] = useState(crm_data?.z_psc || "");
+    const [pic, setPic] = useState<File | string>("");
+    const [web, setWeb] = useState(crm_data?.z_web || "");
+
+    const zmenitUdaje = async () => {
+        const zak_id = getCookie("zak_id");
+        if (!zak_id) return;
+
+        try {
+            const formData = new FormData();
+
+            formData.append("action", "updateAdresa"); // identifikace na backendu (stejně jako `changePasswordAccount`)
+            formData.append("z_id", zak_id);
+            formData.append("z_city", mesto);
+            formData.append("z_adress", ulice);
+            formData.append("z_psc", psc);
+            formData.append("z_web", web);
+            formData.append("z_stat", stateVal);
+            formData.append("z_obcanstvi", obcanstviVal);
+
+            if (typeof pic !== "string" && pic instanceof File) {
+                formData.append("z_pic", pic); // nový obrázek
+            } else {
+                formData.append("z_pic_old", pic); // starý obrázek
+            }
+
+            const response = await axios.post("/api/file_insert_router", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            const data = response.data;
+
+            if (data.success) {
+                alert("Údaje byly úspěšně uloženy.");
+            } else {
+                console.error(data.error);
+                alert("Chyba: " + data.error);
+            }
+        } catch (error) {
+            console.error("Chyba při odesílání údajů:", error);
+            alert("Nastala chyba na serveru.");
+        }
+    };
+
     return(
         <Row className="pe-4 mt-3">
             <Col xs="12">
@@ -215,21 +344,39 @@ const Adresa_client = ({crm_data, activeKey} : CrmBodyClientTypes) => {
                             <Row xs="12">
                                 <Col xs="12" lg="6">
                                      <FloatingLabel controlId="mesto" label="Trvalé bydliště">
-                                        <Form.Control type="text" placeholder="Trvalé bydliště" />
+                                        <Form.Control value={mesto} onChange={(e) => setMesto(e.target.value)} type="text" placeholder="Trvalé bydliště" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6">
                                      <FloatingLabel controlId="ulice" label="Ulice">
-                                        <Form.Control type="text" placeholder="Ulice" />
+                                        <Form.Control value={ulice} onChange={(e) => setUlice(e.target.value)} type="text" placeholder="Ulice" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <FloatingLabel controlId="psc" label="Psč">
-                                        <Form.Control type="text" placeholder="Psč" />
+                                        <Form.Control value={psc} onChange={(e) => setPsc(e.target.value)} type="text" placeholder="Psč" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
-                                    <MaxDropdown value={stateVal} onChange={handleStateChange} />
+                                    <MaxDropdown value={stateVal} onChange={handleStateChange} staty={staty} target="stat"/>
+                                </Col>
+                                <Col xs="12" lg="6" className="mt-3">
+                                    <FloatingLabel controlId="psc" label="Obrázek">
+                                        <Form.Control  onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                            setPic(file);
+                                            }
+                                        }}  type="file" placeholder="Obrázek" />
+                                    </FloatingLabel>
+                                </Col>
+                                <Col xs="12" lg="6" className="mt-3">
+                                    <MaxDropdown value={obcanstviVal} onChange={handleObcanstviVal} staty={staty} target="obcanstvi"/>
+                                </Col>
+                                <Col xs="12">
+                                    <div className="d-flex align-items-center mt-3 justify-content-center">
+                                        <button className="v-btn" onClick={()=>zmenitUdaje()}>Uložit heslo</button>
+                                    </div>
                                 </Col>
                             </Row>
                         </Accordion.Body>

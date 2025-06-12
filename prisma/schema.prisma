@@ -38,6 +38,8 @@ model v_zakaznici {
   z_obcanstvi String? @db.VarChar(50)
   z_state     String? @db.VarChar(50)
   z_psc       String? @db.VarChar(50)
+  z_pic       String  @default("basic-profile.jpg") @db.VarChar(255)
+  z_web       String? @db.VarChar(50)
 }
 
 model predvolby {

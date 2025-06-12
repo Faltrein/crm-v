@@ -1,7 +1,7 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { v_zakaznici } from "@prisma/client";
+import { predvolby, staty, v_zakaznici } from "@prisma/client";
 import { ReactNode } from "react";
-
+import { File } from "formidable";
 export type CookiesLoginType = {
     consentValue: string;
 }
@@ -30,6 +30,9 @@ export type ZakanikId = {
 
 export type CrmBodyClientTypes = {
   crm_data: v_zakaznici | null;
+  predvolby?: predvolby[];
+  staty?: staty[] | null;
+  p_hash?: string | null;
   activeKey?: string | null;
 };
 
@@ -50,7 +53,13 @@ export type SubNavClassType = {
   
 }
 
-export type DropdownTypes = {
-  value: string;
-  onChange: (value: string | null) => void;
+export type ChangePasswordRequestBody = {
+  zak_id: string;
+  actualPass: string;
+  newPass: string;
+};
+
+export interface FormDataAdresaPic {
+  fields: Record<string, string>;
+  files: Record<string, File | File[]>;
 }

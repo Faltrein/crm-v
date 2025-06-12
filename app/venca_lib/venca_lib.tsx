@@ -1,11 +1,13 @@
 "use client";
-import { CookieHandlerType, DropdownTypes } from "../app_types/global_types";
+import { CookieHandlerType} from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { ActiveLinkType, Col_6Type } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
 import { Dropdown } from "react-bootstrap";
+import { DropdownTypes } from "./venca_lib_types";
+
 export const Temp_cleaner = () => {
     return (
         <button type="button" className="btn-danger btn" onClick={() => {
@@ -82,8 +84,7 @@ export const deleteCookie = (name: string): void => {
   document.cookie = `${encodeURIComponent(name)}=; path=/; max-age=0`;
 };
 
-export const PhonePrefixSelect = ({ value, onChange } : DropdownTypes) => {
-  const prefixes = ["+420", "+421", "+49", "+44"];
+export const PhonePrefixSelect = ({ value, onChange, predvolby } : DropdownTypes) => {
 
   return (
     <Dropdown onSelect={onChange} className="phone-prefix-dropdown d-inline-bloc" >
@@ -95,9 +96,9 @@ export const PhonePrefixSelect = ({ value, onChange } : DropdownTypes) => {
         {value}
       </Dropdown.Toggle>
       <Dropdown.Menu className="rounded w-100">
-        {prefixes.map((prefix) => (
-          <Dropdown.Item eventKey={prefix} key={prefix} active={prefix === value}>
-            {prefix}
+        {predvolby?.map((prefix) => (
+          <Dropdown.Item eventKey={prefix.predvolba} key={prefix.predvolba} active={prefix.predvolba === value}>
+            {prefix.predvolba}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>
@@ -105,19 +106,19 @@ export const PhonePrefixSelect = ({ value, onChange } : DropdownTypes) => {
   );
 }
 
-export const MaxDropdown = ({ value, onChange } : DropdownTypes) => {
-  const countries = [
-    { code: "", label: "Vyber stát" },
-    { code: "cz", label: "Česká republika" },
-    { code: "sk", label: "Slovensko" },
-    { code: "de", label: "Německo" },
-    { code: "pl", label: "Polsko" },
-  ];
-
+export const MaxDropdown = ({ value, onChange, staty, target }: DropdownTypes) => {
+  // Dynamicky vyber, co bude jako "target" (stat nebo obcanstvi)
+  const transformedStaty = staty?.map(({ id, stat, obcanstvi }) => ({
+    id,
+    target: target === "obcanstvi" ? obcanstvi : stat,
+  }));
+  const selectedStat = transformedStaty?.find((s) => s.id.toString() === value);
   
   return (
     <Dropdown
-      onSelect={onChange}
+      onSelect={(eventKey) => {
+        if (eventKey) onChange(eventKey);
+      }}
       className="max-dropdown"
       style={{ width: "100%" }}
     >
@@ -127,17 +128,17 @@ export const MaxDropdown = ({ value, onChange } : DropdownTypes) => {
         className="w-100 rounded"
         style={{ textAlign: "left" }}
       >
-        {countries.find((c) => c.code === value)?.label || "Vyber stát"}
+        {selectedStat?.target || "Vyber stát"}
       </Dropdown.Toggle>
 
       <Dropdown.Menu className="rounded w-100">
-        {countries.map(({ code, label }) => (
+        {transformedStaty?.map(({ id, target }) => (
           <Dropdown.Item
-            eventKey={code}
-            key={code}
-            active={code === value}
+            eventKey={id.toString()}
+            key={id}
+            active={id.toString() === value}
           >
-            {label}
+            {target}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>
