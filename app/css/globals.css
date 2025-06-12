@@ -98,6 +98,89 @@
 .shadow {
   box-shadow: 0 .5rem 1rem var(--v-rbga) !important;
 }
+
+.accordion-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--medium-black);
+  text-align: left;
+  background-color: var(--bg-white);
+  border: 0;
+  border-radius: 0;
+  overflow-anchor: none;
+  transition: color 0.15s ease-in-out,
+              background-color 0.15s ease-in-out,
+              border-color 0.15s ease-in-out,
+              box-shadow 0.15s ease-in-out;
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--v-rbga);
+  background-color: var(--v-rbga) !important;
+  box-shadow: inset 0 -1px 0 var(--v-rbga);
+  color: var(--bg-white) !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+ transform: rotate(180deg) !important;
+ background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e") !important;
+}
+
+.accordion-button::after {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: auto;
+  content: "";
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23292929' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.accordion-button:focus {
+  z-index: 3;
+  border-color: var(--bg-v-light) !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--v-rbga) !important;
+}
+
+.accordion-item {
+  background-color: #fff;
+  border: 1px solid var(--v-rbga) !important; 
+  border-radius: 0.25rem;
+}
+
+.form-floating > .form-select {
+  border: 1px solid var(--bs-secondary);
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
+  background-color: var(--bs-body-bg) !important; 
+}
+
+.form-floating > .form-select:focus {
+  border-color: var(--bg-v-light);
+  box-shadow: 0 0 12px var(--v-rbga);
+  outline: none;
+}
+
+.form-select {
+  border: 1px solid var(--bs-secondary);
+  border-radius: 10px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: none;
+}
+
+.form-select:focus {
+  border-color: var(--bg-v-light);
+  box-shadow: 0 0 12px var(--v-rbga);
+  outline: none;
+}
 /*--------*/
 
 /*personal global styles*/
@@ -236,6 +319,12 @@ a {
   width: 90%;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.text-shadow {
+  font-weight: 500;
+  font-size: 1.1rem !important;
+  text-shadow: 2px 2px 2px var(--v-rbga);
 }
 
 @media (max-width:992px) {

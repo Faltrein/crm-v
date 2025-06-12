@@ -30,6 +30,7 @@ export type ZakanikId = {
 
 export type CrmBodyClientTypes = {
   crm_data: v_zakaznici | null;
+  activeKey?: string | null;
 };
 
 export type CrmLinksType = {
@@ -46,4 +47,5 @@ export type SubNavbarType = {
 
 export type SubNavClassType = {
   className: string;
+  
 }

@@ -48,13 +48,13 @@ export default async function RootLayout({
               {podminka === 1 ? children : 
                 <ClientReduxProvider>
                   <div className="container-fluid row g-0 mx-auto">
-                    <div className="col-12 col-xl-3 col-xxl-2 mb-5">
+                    <div className="col-12 col-xl-3 col-xxl-2 mb-5 mb-xl-0">
                       <div className="sticky-nav-body">
                         <SubNavbar className={""}/>
                         <Crm_body zak_id={zak_id} />
                       </div>
                     </div>
-                    <div className="col-12 col-xl-9 col-xxl-10 mt-5">
+                    <div className="col-12 col-xl-9 col-xxl-10 mt-5 mt-xl-0">
                       {children}
                     </div>
                   </div>

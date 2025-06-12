@@ -6,6 +6,7 @@ import { Button, Row, Col } from "react-bootstrap";
 import { useAppDispatch } from "@/app/redux-store/hooks";
 import { deleteCookie } from "@/app/venca_lib/venca_lib";
 import { setSubnavOpen } from "@/app/redux-store/accountSlice";
+import { AccountSubnavClient } from "@/app/account/account_client";
 
 export const SubNawbar_client = () => {
   const pathname = usePathname();
@@ -18,6 +19,9 @@ export const SubNawbar_client = () => {
     switch (pathname) {
       case "/zakaznici":
         setSubnav(<ZakazniciSubnavContent />);
+        break;
+      case "/account":
+        setSubnav(<AccountSubnavClient />)
         break;
       default:
         setSubnav(null);
@@ -71,8 +75,8 @@ export const SubNawbar_client = () => {
       {(
         <div className={`subnav-container ${isOpen ? "active" : ""}`}>
           <Row>
-            <Col xs="3">Logo</Col>
-            <Col xs="6" className="d-flex align-items-center justify-content-center">{subnav}</Col>
+            <Col xs="2">Logo</Col>
+            <Col xs="7" className="d-flex align-items-center justify-content-start">{subnav}</Col>
             <Col xs="3" className="d-flex align-items-center justify-content-center" >
               <button className="v-btn-circle me-2" onClick={() => router.back()}>
                 <i className="bi bi-arrow-left-short fs-3"></i>
