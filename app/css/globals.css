@@ -44,6 +44,157 @@
   outline: none;
 }
 
+.phone-prefix-dropdown {
+  position: relative; /* nutné pro správné zarovnání */
+}
+
+.phone-prefix-dropdown .dropdown-toggle {
+  width: 5rem !important;
+  height: calc(3.5rem + 2px);
+  border: 1px solid var(--bs-secondary);
+  border-radius: 10px 0 0 10px;
+  background-color: var(--v-rbga);
+  color: #fff !important;
+  padding-right: 1.75rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* odstranění defaultní šipky Bootstrapu */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* hover a focus */
+.phone-prefix-dropdown .dropdown-toggle:hover,
+.phone-prefix-dropdown .dropdown-toggle:focus {
+  background-color: var(--v-rbga) !important;
+  color: #fff !important;
+  border-color: var(--bg-v-light) !important;
+  box-shadow: 0 0 12px var(--v-rbga) !important;
+  outline: none !important;
+}
+
+/* Dropdown menu */
+.phone-prefix-dropdown .dropdown-menu {
+  width: 5rem !important;
+  min-width: 5rem !important;  /* zruší defaultní min-width */
+  max-width: 5rem !important;
+  left: 0 !important;
+  right: auto !important;
+  border-radius: 10px;
+  background-color: var(--v-rbga);
+  box-shadow: none; /* nebo dle potřeby */
+}
+
+/* Položky v dropdownu */
+.phone-prefix-dropdown .dropdown-item {
+  color: #fff;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.phone-prefix-dropdown .dropdown-item:hover,
+.phone-prefix-dropdown .dropdown-item:focus {
+  background-color: var(--btn-approve); 
+  color: #fff;
+}
+
+/* Vybraná položka */
+.phone-prefix-dropdown .dropdown-item.active,
+.phone-prefix-dropdown .dropdown-item:active {
+  background-color: var(--btn-approve);
+  color: #fff;
+}
+
+.phone-prefix-dropdown.show > .dropdown-toggle {
+  background-color: var(--v-rbga) !important; 
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+.phone-prefix-dropdown.show > .dropdown-menu {
+  background-color: var(--v-rbga) !important; 
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* případně zrušit shadow */
+.phone-prefix-dropdown.show > .dropdown-toggle:focus,
+.phone-prefix-dropdown.show > .dropdown-toggle:hover {
+  box-shadow: 0 0 12px var(--v-rbga) !important; /* nebo none podle potřeby */
+}
+
+.dropdown-toggle::after {
+  display: none !important; 
+}
+
+
+.max-dropdown {
+  width: 100%;
+
+}
+
+.max-dropdown .dropdown-toggle {
+  width: 100% !important;
+  text-align: left;
+  background-color: var(--bg-white);
+  color: var(--medium-black) !important;
+  border-radius: 10px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+  border: 1px solid var(--bs-secondary);
+  padding-left: 1rem;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  box-sizing: border-box;
+  
+  border-radius: 10px 10px 10px 10px !important;
+}
+
+.max-dropdown .dropdown-toggle:hover,
+.max-dropdown .dropdown-toggle:focus {
+  background-color: var(--v-rbga) !important;
+  border-color: var(--bg-v-light) !important;
+  box-shadow: 0 0 12px var(--v-rbga) !important;
+  outline: none !important;
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
+  color: var(--text-color-white) !important;
+  border-radius: 10px 10px 10px 10px !important;
+}
+
+.max-dropdown .dropdown-menu {
+  width: 100% !important;
+  border-radius: 10px;
+  background-color: var(--v-rbga);
+  box-shadow: none;
+  max-height: 200px; /* případně scroll při velkém seznamu */
+  overflow-y: auto;
+}
+
+.max-dropdown .dropdown-item {
+  color: #fff;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.max-dropdown .dropdown-item:hover,
+.max-dropdown .dropdown-item:focus,
+.max-dropdown .dropdown-item.active,
+.max-dropdown .dropdown-item:active {
+  background-color: var(--btn-approve);
+  color: #fff;
+}
+
+
 .input-group-text.bg-v-light {
   background-color: var(--bg-v-light) !important;
   color: var(--text-color-white);
@@ -98,6 +249,7 @@
 .shadow {
   box-shadow: 0 .5rem 1rem var(--v-rbga) !important;
 }
+
 
 .accordion-button {
   position: relative;

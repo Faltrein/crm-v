@@ -49,3 +49,8 @@ export type SubNavClassType = {
   className: string;
   
 }
+
+export type DropdownTypes = {
+  value: string;
+  onChange: (value: string | null) => void;
+}

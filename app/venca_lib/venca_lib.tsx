@@ -1,11 +1,11 @@
 "use client";
-import { CookieHandlerType } from "../app_types/global_types";
+import { CookieHandlerType, DropdownTypes } from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { ActiveLinkType, Col_6Type } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
-
+import { Dropdown } from "react-bootstrap";
 export const Temp_cleaner = () => {
     return (
         <button type="button" className="btn-danger btn" onClick={() => {
@@ -80,4 +80,67 @@ export const Col_6 = ({className, text_1, text_2} : Col_6Type) => {
 
 export const deleteCookie = (name: string): void => {
   document.cookie = `${encodeURIComponent(name)}=; path=/; max-age=0`;
+};
+
+export const PhonePrefixSelect = ({ value, onChange } : DropdownTypes) => {
+  const prefixes = ["+420", "+421", "+49", "+44"];
+
+  return (
+    <Dropdown onSelect={onChange} className="phone-prefix-dropdown d-inline-bloc" >
+      <Dropdown.Toggle
+        variant="secondary"
+        id="dropdown-phone-prefix"
+        className="rounded-start"
+      >
+        {value}
+      </Dropdown.Toggle>
+      <Dropdown.Menu className="rounded w-100">
+        {prefixes.map((prefix) => (
+          <Dropdown.Item eventKey={prefix} key={prefix} active={prefix === value}>
+            {prefix}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+}
+
+export const MaxDropdown = ({ value, onChange } : DropdownTypes) => {
+  const countries = [
+    { code: "", label: "Vyber stát" },
+    { code: "cz", label: "Česká republika" },
+    { code: "sk", label: "Slovensko" },
+    { code: "de", label: "Německo" },
+    { code: "pl", label: "Polsko" },
+  ];
+
+  
+  return (
+    <Dropdown
+      onSelect={onChange}
+      className="max-dropdown"
+      style={{ width: "100%" }}
+    >
+      <Dropdown.Toggle
+        variant="secondary"
+        id="dropdown-country-select"
+        className="w-100 rounded"
+        style={{ textAlign: "left" }}
+      >
+        {countries.find((c) => c.code === value)?.label || "Vyber stát"}
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu className="rounded w-100">
+        {countries.map(({ code, label }) => (
+          <Dropdown.Item
+            eventKey={code}
+            key={code}
+            active={code === value}
+          >
+            {label}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
 };

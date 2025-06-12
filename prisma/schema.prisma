@@ -39,3 +39,14 @@ model v_zakaznici {
   z_state     String? @db.VarChar(50)
   z_psc       String? @db.VarChar(50)
 }
+
+model predvolby {
+  id        Int    @id @default(autoincrement())
+  predvolba String @db.VarChar(10)
+}
+
+model staty {
+  id        Int    @id @default(autoincrement())
+  stat      String @db.VarChar(100)
+  obcanstvi String @db.VarChar(100)
+}

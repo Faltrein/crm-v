@@ -1,8 +1,8 @@
 "use client"
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { AccountLeaveType, CrmBodyClientTypes } from "../app_types/global_types";
-import { Accordion, Image, Container,Row, Col, FloatingLabel, Form } from "react-bootstrap";
-import { Col_6 } from "../venca_lib/venca_lib";
+import { Accordion, Image, Container,Row, Col, FloatingLabel, Form} from "react-bootstrap";
+import { Col_6, MaxDropdown, PhonePrefixSelect } from "../venca_lib/venca_lib";
 import Link from "next/link";
 import { useAppSelector } from "../redux-store/hooks";
 import { useDispatch } from "react-redux";
@@ -104,6 +104,35 @@ const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
     const toggleKontaktAcc = () => {
         dispatch(toggleKontakt());
     }
+
+    const [prefix, setPrefix] = useState("+420");
+    const [secondPrefix, setSecondPrefix] = useState("+420");
+
+    const [phone, setPhone] = useState("");
+    const [secondPhone, setSecondPhone] = useState("");
+    const [firstMail, setFirstMail] = useState("");
+    const [secondMail, setSecondMail] = useState("");
+
+    useEffect(() => {
+        if (crm_data) {
+            setPhone(crm_data.z_phone ?? "");
+            setSecondPhone(crm_data.z_phone_2 ?? "");
+            setFirstMail(crm_data.z_mail ?? "");
+            setSecondMail(crm_data.z_mail_2 ?? "");
+        }
+    }, [crm_data]);
+
+    const handlePhoneChange = (value: string | null) => {
+        if (value !== null) {
+            setPrefix(value);
+        }
+    };
+
+    const handleSecondPhonePref = (value: string | null) => {
+        if (value !== null) {
+            setSecondPrefix(value);
+        }
+    };
     return (
         <Row className="pe-4 mt-3">
             <Col xs="12">
@@ -114,23 +143,44 @@ const Kontakty = ({crm_data, activeKey} : CrmBodyClientTypes) => {
                             <Row xs="12">
                                 <Col xs="12" lg="6">
                                      <FloatingLabel controlId="prvni-email" label="První e-mail">
-                                        <Form.Control type="email" placeholder="První email" />
+                                        <Form.Control value={firstMail} onChange={(e) => setFirstMail(e.target.value)} type="email" placeholder="První email" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6">
                                      <FloatingLabel controlId="druhy-email" label="Druhý e-mail">
-                                        <Form.Control type="email" placeholder="Druhý e-mail" />
+                                        <Form.Control value={secondMail} onChange={(e) => setSecondMail(e.target.value)} type="email" placeholder="Druhý e-mail" />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
-                                    <FloatingLabel controlId="prvni-tel" label="První telefon">
-                                        <Form.Control type="text" placeholder="První telefon" />
-                                    </FloatingLabel>
+                                    <div className="input-group">
+                                        <PhonePrefixSelect value={prefix} onChange={handlePhoneChange} />
+                                        
+                                        <FloatingLabel controlId="prvni-tel" label="První telefon" className="flex-grow-1">
+                                        <Form.Control
+                                            type="tel"
+                                            placeholder="První telefon"
+                                            className="rounded-start-0"
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            value={phone}
+                                        />
+                                        </FloatingLabel>
+                                    </div>
                                 </Col>
+
                                 <Col xs="12" lg="6" className="mt-3">
-                                    <FloatingLabel controlId="druhy-tel" label="Druhý telefon">
-                                        <Form.Control type="text" placeholder="Druhý telefon" />
-                                    </FloatingLabel>
+                                    <div className="input-group">
+                                        <PhonePrefixSelect value={secondPrefix} onChange={handleSecondPhonePref} />
+                                        
+                                        <FloatingLabel controlId="druhy-tel" label="Druhý telefon" className="flex-grow-1">
+                                        <Form.Control
+                                            type="tel"
+                                            placeholder="Druhý telefon"
+                                            className="rounded-start-0"
+                                            onChange={(e) => setSecondPhone(e.target.value)}
+                                            value={secondPhone}
+                                        />
+                                        </FloatingLabel>
+                                    </div>
                                 </Col>
                             </Row>
                         </Accordion.Body>
@@ -146,8 +196,15 @@ const Adresa_client = ({crm_data, activeKey} : CrmBodyClientTypes) => {
     const dispatch = useDispatch();
 
     const toggleAdresaAcc = () => {
-        dispatch(toggleKontakt());
+        dispatch(toggleAdresa());
     }
+
+    const [stateVal, setStateVal] = useState("+420");
+    const handleStateChange = (value: string | null) => {
+        if (value !== null) {
+            setStateVal(value);
+        }
+    };
     return(
         <Row className="pe-4 mt-3">
             <Col xs="12">
@@ -172,15 +229,7 @@ const Adresa_client = ({crm_data, activeKey} : CrmBodyClientTypes) => {
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
-                                    <FloatingLabel controlId="stat" label="Stát">
-                                        <Form.Select aria-label="Zvol stát">
-                                        <option value="">Vyber stát</option>
-                                        <option value="cz">Česká republika</option>
-                                        <option value="sk">Slovensko</option>
-                                        <option value="de">Německo</option>
-                                        <option value="pl">Polsko</option>
-                                        </Form.Select>
-                                    </FloatingLabel>
+                                    <MaxDropdown value={stateVal} onChange={handleStateChange} />
                                 </Col>
                             </Row>
                         </Accordion.Body>
