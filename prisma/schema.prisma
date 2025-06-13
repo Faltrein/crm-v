@@ -28,7 +28,9 @@ model v_zakaznici {
   z_mail      String? @db.VarChar(50)
   z_mail_2    String? @db.VarChar(50)
   z_phone     String? @db.VarChar(30)
+  z_pred_1    String? @db.VarChar(10)
   z_phone_2   String? @db.VarChar(30)
+  z_pred_2    String? @db.VarChar(10)
   z_to_pay    Int?
   z_payed     Int?
   z_owner     String? @db.VarChar(50)

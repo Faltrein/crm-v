@@ -21,16 +21,3 @@ export async function getPredvolby() {
     });
     return predvolby;
 }
-
-export async function getHash(zak_id: number): Promise<string | null> {
-  const p_hash = await prisma.v_login.findFirst({
-    select: {
-      password_hash: true,
-    },
-    where: {
-      z_id: zak_id,
-    },
-  });
-
-  return p_hash?.password_hash ?? null;
-}

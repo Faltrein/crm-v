@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { changePasswordAccount } from "../crm_body_insert/crm_account_insert";
+import { changePasswordAccount, updateAccountKontakty } from "../crm_body_insert/crm_account_insert";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +9,9 @@ export async function POST(req: NextRequest) {
 
     switch (action) {
       case "changePasswordAccount":
-        return await changePasswordAccount(body); // jen body nově v app routeru
+        return await changePasswordAccount(body);
+      case "updateKontakty":
+        return await updateAccountKontakty(body);
       default:
         return NextResponse.json({ error: "Unknown action" }, { status: 400 });
     }

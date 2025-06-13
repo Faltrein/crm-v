@@ -34,6 +34,7 @@ export type CrmBodyClientTypes = {
   staty?: staty[] | null;
   p_hash?: string | null;
   activeKey?: string | null;
+  onUpdate?: React.Dispatch<React.SetStateAction<v_zakaznici | null>>;
 };
 
 export type CrmLinksType = {
@@ -62,4 +63,14 @@ export type ChangePasswordRequestBody = {
 export interface FormDataAdresaPic {
   fields: Record<string, string>;
   files: Record<string, File | File[]>;
+}
+
+export type ChangeKontakty = {
+  z_id: string;
+  z_phone: string;
+  z_phone_2: string;
+  z_mail: string;
+  z_mail_2: string;
+  z_prefix: string;
+  z_prefix_2: string;
 }

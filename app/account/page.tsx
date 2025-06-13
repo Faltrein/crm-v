@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { loggedZak } from "../api/crm_body_search/crm_body_search";
 import { Account_client } from "./account_client";
-import { getStaty, getPredvolby, getHash } from "../api/crm_body_search/crm_acount";
+import { getStaty, getPredvolby} from "../api/crm_body_search/crm_acount";
 
 const Account = async () => {
     const cookieStore = await cookies();
@@ -16,11 +16,9 @@ const Account = async () => {
     const user_data = await loggedZak(zak_id.value);
     const staty = await getStaty();
     const predvolby = await getPredvolby();
-    const zakIdNum = parseInt(zak_id.value, 10);
-    const p_hash = await getHash(zakIdNum);
     return (
         <section className="p-3 container-fluid" id="account">
-            <Account_client crm_data={user_data} predvolby={predvolby} staty={staty} p_hash={p_hash}/>
+            <Account_client crm_data={user_data} predvolby={predvolby} staty={staty}/>
         </section>
     );
 }

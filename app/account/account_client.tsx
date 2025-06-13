@@ -37,8 +37,9 @@ export const AccountSubnavClient = () => {
     );
 }
 
-export const Account_client = ({crm_data, predvolby, staty, p_hash} : CrmBodyClientTypes) => {
+export const Account_client = ({crm_data, predvolby, staty} : CrmBodyClientTypes) => {
     //toto načítá server zde propojujeme react componenty
+    const [data, setData] = useState(crm_data);
     const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
     const activeHesla = useAppSelector(state => state.account.hesla);
     const activeKontakt = useAppSelector(state => state.account.kontakt);
@@ -49,12 +50,12 @@ export const Account_client = ({crm_data, predvolby, staty, p_hash} : CrmBodyCli
             <Row className="g-0">
                 <Col xs="12" xl="8">
                     <h1 className="display-1">Account CRM-V uživatele {crm_data?.z_name} {crm_data?.z_surename}</h1>
-                    <Hesla crm_data={crm_data} activeKey={activeHesla}  p_hash={p_hash}/>
-                    <Kontakty crm_data={crm_data} activeKey={activeKontakt} predvolby={predvolby}/>
-                    <Adresa_client crm_data={crm_data} activeKey={activeAdresa} staty={staty}/>
+                    <Hesla crm_data={data} activeKey={activeHesla} />
+                    <Kontakty crm_data={data} activeKey={activeKontakt} predvolby={predvolby} onUpdate={setData}/>
+                    <Adresa_client crm_data={data} activeKey={activeAdresa} staty={staty} onUpdate={setData}/>
                 </Col>
                 <Col xs="12" xl="4">
-                    <Profile_card crm_data={crm_data}/>
+                    <Profile_card crm_data={data}/>
                 </Col>
             </Row>
         </Container>
@@ -171,7 +172,7 @@ const Hesla = ({ activeKey} : CrmBodyClientTypes) => {
     );
 }
 
-const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
+const Kontakty = ({crm_data, activeKey, predvolby, onUpdate} : CrmBodyClientTypes) => {
     const dispatch = useDispatch();
 
     const toggleKontaktAcc = () => {
@@ -185,7 +186,7 @@ const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
     const [secondPhone, setSecondPhone] = useState("");
     const [firstMail, setFirstMail] = useState("");
     const [secondMail, setSecondMail] = useState("");
-
+    const [udajeOdeslane, setUdajeOdeslane] = useState(false);
     useEffect(() => {
         if (crm_data) {
             setPhone(crm_data.z_phone ?? "");
@@ -206,6 +207,50 @@ const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
             setSecondPrefix(value);
         }
     };
+
+    const  zmenitKontaktUdaje = async () => {
+        const zak_id = getCookie("zak_id");
+        if(!zak_id) {
+            return;
+        } 
+        try {
+
+            const response = await axios.post("/api/account_router", {
+                action: "updateKontakty",
+                z_id: zak_id,
+                z_phone: phone,
+                z_phone_2: secondPhone,
+                z_mail: firstMail,
+                z_mail_2: secondMail,
+                z_prefix: prefix,
+                z_prefix_2: secondPrefix,
+            });
+
+            const data = response.data;
+
+            if(data.success) {
+                setUdajeOdeslane(true);
+                if (onUpdate) {
+                    onUpdate((prev) => ({
+                        ...prev!,
+                        z_phone: phone,
+                        z_phone_2: secondPhone,
+                        z_mail: firstMail,
+                        z_mail_2: secondMail,
+                        z_pred_1: prefix,
+                        z_pred_2: secondPrefix,
+                    }));
+                    }
+
+            } else {
+                console.log(data.error);
+                setUdajeOdeslane(false);
+            }
+        } catch {
+            setUdajeOdeslane(false);
+        }
+    }
+
     return (
         <Row className="pe-4 mt-3">
             <Col xs="12">
@@ -255,6 +300,16 @@ const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
                                         </FloatingLabel>
                                     </div>
                                 </Col>
+                                {udajeOdeslane && (
+                                    <Col xs="12" className="d-flex align-items-center justify-content-center mt-3">
+                                        <strong>Kontaktní údaje úspěšně aktualizovány</strong>
+                                    </Col>
+                                )}
+                                <Col xs="12">
+                                    <div className="d-flex align-items-center mt-3 justify-content-center">
+                                        <button className="v-btn" onClick={()=>zmenitKontaktUdaje()}>Uložit kontaktní údaje</button>
+                                    </div>
+                                </Col>
                             </Row>
                         </Accordion.Body>
                     </Accordion.Item>
@@ -264,7 +319,7 @@ const Kontakty = ({crm_data, activeKey, predvolby} : CrmBodyClientTypes) => {
     );
 }
 
-const Adresa_client = ({crm_data, activeKey, staty, p_hash} : CrmBodyClientTypes) => {
+const Adresa_client = ({crm_data, activeKey, staty, onUpdate} : CrmBodyClientTypes) => {
 
     const dispatch = useDispatch();
 
@@ -290,7 +345,8 @@ const Adresa_client = ({crm_data, activeKey, staty, p_hash} : CrmBodyClientTypes
     const [ulice, setUlice] = useState(crm_data?.z_adress || "");
     const [psc, setPsc] = useState(crm_data?.z_psc || "");
     const [pic, setPic] = useState<File | string>("");
-    const [web, setWeb] = useState(crm_data?.z_web || "");
+    const [web] = useState(crm_data?.z_web || "");
+    const [udajeOdeslaneAdreasa, setUdajeOdeslaneAdresa] = useState(false);
 
     const zmenitUdaje = async () => {
         const zak_id = getCookie("zak_id");
@@ -323,10 +379,20 @@ const Adresa_client = ({crm_data, activeKey, staty, p_hash} : CrmBodyClientTypes
             const data = response.data;
 
             if (data.success) {
-                alert("Údaje byly úspěšně uloženy.");
+                setUdajeOdeslaneAdresa(true);
+                if (onUpdate) {
+                    onUpdate((prev) => ({
+                        ...prev!,
+                        z_city: mesto,
+                        z_adress: ulice,
+                        z_psc: psc,
+                        z_state: data.stat,
+                        z_obcanstvi: data.obcanstvi,
+                    }));
+                    }
+                
             } else {
-                console.error(data.error);
-                alert("Chyba: " + data.error);
+                setUdajeOdeslaneAdresa(false);
             }
         } catch (error) {
             console.error("Chyba při odesílání údajů:", error);
@@ -362,20 +428,30 @@ const Adresa_client = ({crm_data, activeKey, staty, p_hash} : CrmBodyClientTypes
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <FloatingLabel controlId="psc" label="Obrázek">
-                                        <Form.Control  onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                            setPic(file);
-                                            }
-                                        }}  type="file" placeholder="Obrázek" />
+                                        <Form.Control
+                                            type="file"
+                                            placeholder="Obrázek"
+                                            onChange={(e) => {
+                                                const target = e.target as HTMLInputElement;
+                                                const file = target.files?.[0];
+                                                if (file) {
+                                                    setPic(file);
+                                                }
+                                            }}
+                                        />
                                     </FloatingLabel>
                                 </Col>
                                 <Col xs="12" lg="6" className="mt-3">
                                     <MaxDropdown value={obcanstviVal} onChange={handleObcanstviVal} staty={staty} target="obcanstvi"/>
                                 </Col>
+                                {udajeOdeslaneAdreasa && (
+                                    <Col xs="12" className="mt-3 d-flex align-items-center justify-content-center">
+                                        <strong>Údaje úspěšně odeslány</strong>
+                                    </Col>
+                                )}
                                 <Col xs="12">
                                     <div className="d-flex align-items-center mt-3 justify-content-center">
-                                        <button className="v-btn" onClick={()=>zmenitUdaje()}>Uložit heslo</button>
+                                        <button className="v-btn" onClick={()=>zmenitUdaje()}>Uložit adresu</button>
                                     </div>
                                 </Col>
                             </Row>
@@ -391,7 +467,7 @@ const Profile_card = ({crm_data} : CrmBodyClientTypes) => {
     return (
         <Row className="g-0 rounded-10 border border-dark p-3 text-6 me-3 mt-2">
             <Col xs="12" className="border-bottom border-secondary pb-3 d-flex justify-content-center">
-                <Image src="basic-profile.jpg" className=" profile-pic" alt="profilový obrázek"/>
+                <Image src={crm_data?.z_pic} className=" profile-pic" alt="profilový obrázek"/>
             </Col>
             <Col xs="12" className="py-2 border-bottom border-secondary">
                 <h2 className="display-3 text-center">Uživatel</h2>
@@ -406,13 +482,13 @@ const Profile_card = ({crm_data} : CrmBodyClientTypes) => {
 
             {crm_data?.z_phone && (
                 <>
-                    <Col_6 className={`${crm_data?.z_phone_2 ? "pt-3" : "py-3 border-bottom border-secondary"}`} text_1="První číslo:" text_2={crm_data?.z_phone}/>
+                    <Col_6 className={`${crm_data?.z_phone_2 ? "pt-3" : "py-3 border-bottom border-secondary"}`} text_1="První číslo:" text_2={`${crm_data.z_pred_1} ${crm_data.z_phone}`}/>
                 </>
             )}
             
             {crm_data?.z_phone_2 && (
                 <>
-                    <Col_6 className="pb-3 border-bottom border-secondary" text_1="Druhé číslo:" text_2={crm_data.z_phone_2}/>
+                    <Col_6 className="pb-3 border-bottom border-secondary" text_1="Druhé číslo:" text_2={`${crm_data.z_pred_2} ${crm_data.z_phone_2}`}/>
                 </>
             )}
 
@@ -447,7 +523,7 @@ const Profile_card = ({crm_data} : CrmBodyClientTypes) => {
 
             {crm_data?.z_obcanstvi &&(
                 <>
-                    <Col_6 className="pb-3 border-bottom border-secondary" text_1="Občanství:" text_2={crm_data.z_obcanstvi}/>
+                    <Col_6 className="pb-3 border-bottom border-secondary" text_1="Občanství:" text_2={crm_data.z_obcanstvi? crm_data.z_obcanstvi.charAt(0).toUpperCase() + crm_data.z_obcanstvi.slice(1): ""}/>
                 </> 
             )}
 

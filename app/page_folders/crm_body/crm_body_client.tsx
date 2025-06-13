@@ -22,7 +22,7 @@ export const Crm_body_client = ({crm_data} : CrmBodyClientTypes) => {
             
                 <Navbar.Brand className="d-flex d-xl-none display-3 align-items-center">
                     <Link href="/account" title="Váš uživatelský účet" className="d-flex d-xl-none align-items-center text-dark">
-                        <Image src="basic-profile.jpg" className="ms-3 bg-dark profile-pic" alt="profilový obrázek"/>
+                        <Image src={crm_data?.z_pic} className="ms-3 bg-dark profile-pic" alt="profilový obrázek"/>
                         CRM-V {crm_data?.z_name} {crm_data?.z_surename}
                     </Link>
                 </Navbar.Brand>
@@ -33,7 +33,7 @@ export const Crm_body_client = ({crm_data} : CrmBodyClientTypes) => {
                     <Navbar.Brand className="d-none d-xl-flex display-3 mb-4 p-3 ms-3">
                         <Link href="/account" title="Váš uživatelský účet" className="d-none d-xl-flex align-items-center justify-content-center text-dark">
                             CRM-V {crm_data?.z_name} {crm_data?.z_surename}
-                            <Image src="basic-profile.jpg" className="ms-3 profile-pic" alt="profilový obrázek"/>
+                            <Image src={crm_data?.z_pic} className="ms-3 profile-pic" alt="profilový obrázek"/>
                         </Link>
                     </Navbar.Brand>
                     <Crm_link z_type={crm_data?.z_type ?? "login"}/>
