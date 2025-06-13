@@ -3,9 +3,9 @@ import { CookieHandlerType} from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { ActiveLinkType, Col_6Type } from "./venca_lib_types";
+import { ActiveLinkType, Col_6FloatInputType, Col_6Type } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, FloatingLabel, Form } from "react-bootstrap";
 import { DropdownTypes } from "./venca_lib_types";
 
 export const Temp_cleaner = () => {
@@ -145,3 +145,21 @@ export const MaxDropdown = ({ value, onChange, staty, target }: DropdownTypes) =
     </Dropdown>
   );
 };
+
+
+export const Col_6FloatInput = ({className, firstValue, firstSetter, firstId, firstLabel, firstType, secondValue, secondSetter, secondId, secondLabel, secondType, secondClassName} : Col_6FloatInputType) => {
+  return (
+    <>
+      <Col xs="12" md="6" className={`${className} pe-3`}>
+        <FloatingLabel controlId={firstId} label={firstLabel}>
+          <Form.Control value={firstValue} onChange={(e) => firstSetter(e.target.value)} type={firstType} placeholder={firstLabel} />
+        </FloatingLabel>
+      </Col>
+      <Col xs="12" md="6" className={`${className} ${secondClassName}`}>
+        <FloatingLabel controlId={secondId} label={secondLabel}>
+          <Form.Control value={secondValue} onChange={(e) => secondSetter(e.target.value)} type={secondType} placeholder={secondLabel} />
+        </FloatingLabel>
+      </Col>
+    </>
+  );
+}

@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { ZakazniciSubnavContent } from "@/app/zakaznici/zakaznici_client";
 import { Button, Row, Col } from "react-bootstrap";
 import { useAppDispatch } from "@/app/redux-store/hooks";
 import { deleteCookie } from "@/app/venca_lib/venca_lib";
@@ -18,7 +17,6 @@ export const SubNawbar_client = () => {
   useEffect(() => {
     switch (pathname) {
       case "/zakaznici":
-        setSubnav(<ZakazniciSubnavContent />);
         break;
       case "/account":
         setSubnav(<AccountSubnavClient />)

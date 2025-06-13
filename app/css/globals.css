@@ -335,6 +335,27 @@
   box-shadow: 0 0 12px var(--v-rbga);
   outline: none;
 }
+
+.nav-tabs {
+  border-bottom: 1px solid #292929 !important;
+}
+
+.nav-link {
+  color: var(--foreground, #171717) !important; 
+}
+
+.nav-link:hover {
+  border-color: #292929 #292929 transparent !important;
+  background-color: transparent !important;
+  color: var(--foreground, #171717) !important;
+}
+
+.nav-link.active {
+  color: inherit; /* nebo vlastní barva */
+  text-shadow: 2px 2px 2px var(--v-rbga);
+  border-color: #292929 #292929 transparent !important; /* upravený border */
+  background-color: transparent;
+}
 /*--------*/
 
 /*personal global styles*/

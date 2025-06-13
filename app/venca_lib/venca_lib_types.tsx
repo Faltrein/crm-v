@@ -20,3 +20,18 @@ export type DropdownTypes = {
   staty?: staty[] | null;
   target?: "stat" | "obcanstvi";
 }
+
+export type Col_6FloatInputType = {
+  className:string;
+  firstValue: string;
+  firstSetter: (firstValue: string) => void;
+  firstId: string;
+  firstLabel: string;
+  firstType: string;
+  secondValue: string;
+  secondSetter: (secondValue: string) => void;
+  secondId: string;
+  secondLabel: string;
+  secondClassName?: string;
+  secondType: string;
+}

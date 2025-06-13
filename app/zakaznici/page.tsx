@@ -2,9 +2,9 @@ import React from "react";
 import { ZakazniciPage } from "./zakaznici_client";
 const Crm_zakaznici = () => {
     return (
-        <div >
+        <section id="zakaznici" className="p-3">
                 <ZakazniciPage />
-        </div>
+        </section>
     )
 } 
 
