@@ -3,7 +3,7 @@ import { CookieHandlerType} from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { ActiveLinkType, Col_6FloatInputType, Col_6Type } from "./venca_lib_types";
+import { ActiveLinkType, Col_6FloatInputType, Col_6Type, GenericDropdownType } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
 import { Dropdown, FloatingLabel, Form } from "react-bootstrap";
 import { DropdownTypes } from "./venca_lib_types";
@@ -163,3 +163,22 @@ export const Col_6FloatInput = ({className, firstValue, firstSetter, firstId, fi
     </>
   );
 }
+
+export const GenericDropdown = ({ value, onChange, options, placeholder = "Vyber položku" }: GenericDropdownType) => {
+  const selected = options.find((o) => o.id.toString() === value);
+
+  return (
+    <Dropdown onSelect={onChange} className="max-dropdown w-100">
+      <Dropdown.Toggle variant="secondary" className="w-100 text-start rounded">
+        {selected?.label || placeholder}
+      </Dropdown.Toggle>
+      <Dropdown.Menu className="w-100 rounded">
+        {options.map((o) => (
+          <Dropdown.Item eventKey={o.id.toString()} key={o.id} active={o.id.toString() === value}>
+            {o.label}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+};

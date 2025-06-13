@@ -44,6 +44,22 @@
   outline: none;
 }
 
+.right-group {
+  border: 1px solid var(--bs-secondary) !important;
+  border-left: none !important; /* Klíčové: odstraní dvojitou linku mezi inputem a ikonou */
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.right-group:hover,
+.right-group:focus {
+  border-color: var(--bg-v-light);
+  box-shadow: 0 0 10px var(--v-rbga);
+  outline: none;
+  cursor: pointer;
+}
 .phone-prefix-dropdown {
   position: relative; /* nutné pro správné zarovnání */
 }
@@ -389,6 +405,14 @@ a {
 }
 .text-7 {
   font-size: 0.7rem !important;
+}
+
+.text-purple {
+  color: var(--btn-approve);
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 

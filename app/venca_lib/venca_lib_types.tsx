@@ -35,3 +35,15 @@ export type Col_6FloatInputType = {
   secondClassName?: string;
   secondType: string;
 }
+
+export type Option = {
+  id: number;
+  label: string;
+}
+
+export type GenericDropdownType = {
+  value: string;
+  onChange: (value: string | null) => void;
+  options: Option[];
+  placeholder?: string;
+}

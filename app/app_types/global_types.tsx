@@ -74,3 +74,8 @@ export type ChangeKontakty = {
   z_prefix: string;
   z_prefix_2: string;
 }
+
+export type ZakazniciPageType = {
+  predvolby?: predvolby[];
+  staty?: staty[];
+}
