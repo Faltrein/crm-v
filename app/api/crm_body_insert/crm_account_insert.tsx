@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
-import type { ChangeKontakty, ChangePasswordRequestBody, FormDataAdresaPic } from "@/app/app_types/global_types";
+import type { ChangeKontakty, ChangePasswordRequestBody, FormDataAdresaPic, ZakazniciInsUpType } from "@/app/app_types/global_types";
 import fs from "fs";
 import path from "path";
 const prisma = new PrismaClient();
@@ -172,5 +172,97 @@ export async function updateAccountKontakty (body:ChangeKontakty) {
     
     console.error("Chyba v updateAccountKontakty:", error);
     return NextResponse.json({success: false, error: "chyba na straně serveru"});
+  }
+}
+
+export async function insertZakazanik (body: ZakazniciInsUpType) {
+
+  try {
+    const vCreated = body.v_created;
+    const jmeno = normalizeField(body.surename);
+    const surename = normalizeField(body.surename);
+    const userName = normalizeField(body.userName);
+    const mail = normalizeField(body.mail);
+    const secondMail = normalizeField(body.secondMail);
+    const prefix = normalizeField(body.prefix);
+    const phone = normalizeField(body.phone);
+    const secondPrefix = normalizeField(body.secondPrefix);
+    const secondPhone = normalizeField(body.secondPhone);
+    const city = normalizeField(body.city);
+    const adress = normalizeField(body.adress);
+    const owner = normalizeField(body.owner);
+    const web = normalizeField(body.web);
+    const obcanstviVal = normalizeField(body.obcanstviVal);
+    const psc = normalizeField(body.psc);
+    const accType = normalizeField(body.accType);
+    const password = normalizeField(body.password);
+    const pozice = normalizeField(body.pozice);
+    const patri_pod = normalizeField(body.patri_pod);
+
+    const existenceControl = await prisma.v_zakaznici.findFirst({
+      where: {z_mail: mail}
+    })
+
+    if (existenceControl) {
+      return NextResponse.json({ success: false, error: "zákazník existuje"})
+    }
+
+    const newHash = await bcrypt.hash(password, 10);
+
+    const statyField = await prisma.staty.findFirst({
+      where: {id: parseInt(obcanstviVal, 10)}
+    });
+    await prisma.v_zakaznici.create({
+      data: {
+        z_name: jmeno,
+        z_surename: surename,
+        z_mail: mail,
+        z_mail_2: secondMail,
+        z_pred_1: prefix,
+        z_phone: phone,
+        z_pred_2: secondPrefix,
+        z_phone_2: secondPhone,
+        z_owner: owner,
+        z_web: web,
+        z_type: accType,
+        z_obcanstvi: statyField?.obcanstvi,
+        z_state: statyField?.stat,
+        z_adress: adress,
+        z_city: city,
+        z_psc: psc,
+        pozice: pozice,
+        patri_pod: patri_pod
+      }
+    })
+
+    const user = await prisma.v_zakaznici.findFirst({
+      where: {z_mail: mail}, 
+    })
+
+    if (!user) {
+      return NextResponse.json({success:false, error: "zákazník neuložen"});
+    }
+
+    await prisma.v_zakaznici.update({
+      where: {id: user.id},
+      data: {
+        z_id: user.id,
+      }
+    })
+
+    await prisma.v_login.create({
+      data: {
+        z_id: user.id,
+        username: userName,
+        password_hash: newHash,
+        created_at: new Date(),
+        email: mail,
+        v_created: vCreated,
+      }
+    })
+
+    return NextResponse.json({suceess:true});
+  } catch {
+    return NextResponse.json({success:false, error: "chyba server"});
   }
 }

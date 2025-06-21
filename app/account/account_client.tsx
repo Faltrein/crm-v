@@ -10,7 +10,7 @@ import { toggleAdresa, toggleHesla, toggleKontakt } from "../redux-store/account
 import axios from "axios";
 
 export const AccountSubnavClient = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const handleHesla = () => {
         dispatch(toggleHesla());

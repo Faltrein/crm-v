@@ -20,7 +20,7 @@
 /*bootstrap redefined*/
 .form-floating > .form-control {
   border: 1px solid var(--bs-secondary);
-  border-radius: 10px;
+  border-radius: 10px !important;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: none;
 }
@@ -33,7 +33,7 @@
 
 .input-group > .form-control {
   border-left: 0px solid var(--bs-secondary);
-  border-radius: 10px;
+  border-radius: 10px !important;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: none;
 }
@@ -327,7 +327,7 @@
 
 .form-floating > .form-select {
   border: 1px solid var(--bs-secondary);
-  border-radius: 10px;
+  border-radius: 10px !important;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: none;
   background-color: var(--bs-body-bg) !important; 
@@ -372,9 +372,45 @@
   border-color: #292929 #292929 transparent !important; /* upravený border */
   background-color: transparent;
 }
+
+.border-left-none {
+  border: none !important;
+  border-top-left-radius: none !important;
+  border-bottom-left-radius: none !important;
+}
+
+.border-right-none {
+  border: none !important;
+  border-top-right-radius: none !important;
+  border-bottom-right-radius: none !important;
+}
+
+.border-none {
+  border: none !important;
+  border-radius: 0 0 0 0 !important;
+}
+
+.input-group > .form-control.border-left-none {
+  border: none !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+
+.input-group > .form-control.border-right-none {
+  border: none !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+
+.input-group > .form-control.border-none {
+  border: none !important;
+  border-radius: 0 0 0 0 !important;
+}
+
 /*--------*/
 
 /*personal global styles*/
+
 
 a {
   text-decoration: none !important;
@@ -425,8 +461,10 @@ a {
 }
 
 .rounded-10 {
-  border-radius: 10px;
+  border-radius: 10px !important;
 }
+
+
 
 .bg-light {
   background-color: #5f5f5f;
@@ -461,6 +499,27 @@ a {
   border: 2px solid var(--btn-approve);
   background-color: var(--bg-white);
   color: var(--text-color-dark);
+  min-width: 10rem !important;
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.v-btn-loader {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: var(--rounded-btn);
+  border: 2px solid var(--bg-v-light);
+  background-color: var(--bg-v-light);
+  color: var(--text-color-dark);
+  min-width: 10rem !important;
+  min-height: 3rem;
+  position: relative;
 }
 
 .v-btn:hover {
@@ -514,6 +573,8 @@ a {
   margin-top: 3.5rem;
 }
 
+
+
 .w-90 {
   width: 90%;
   margin-left: 5%;
@@ -531,8 +592,86 @@ a {
     width: 100%;
   }
 }
+
+   
 /*----------*/
 
+/*Loader*/
+#container {
+  position: absolute;
+  top: 0;
+  left: 45%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-v-light);
+}
+
+.loading-circle {
+  display: block;
+  border-left: 4px solid;
+  border-top-left-radius: 100%;
+  border-top: 4px solid;
+  margin: 2.5px;
+  animation-name: Loader_611;
+  animation-duration: 1500ms;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+}
+
+.sp1 {
+  border-left-color: var(--bg-white);
+  border-top-color: var(--bg-white);
+  width: 20px;
+  height: 20px;
+}
+
+.sp2 {
+  border-left-color: var(--bg-white);
+  border-top-color: var(--bg-white);
+  width: 15px;
+  height: 15px;
+}
+
+.sp3 {
+  width: 10px;
+  height: 10px;
+  border-left-color: var(--bg-white);
+  border-top-color: var(--bg-white);
+}
+
+@keyframes Loader_611 {
+  0% {
+    transform: rotate(0deg);
+    transform-origin: right bottom;
+  }
+
+  25% {
+    transform: rotate(90deg);
+    transform-origin: right bottom;
+  }
+
+  50% {
+    transform: rotate(180deg);
+    transform-origin: right bottom;
+  }
+
+  75% {
+    transform: rotate(270deg);
+    transform-origin: right bottom;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    transform-origin: right bottom;
+  }
+}
+
+/*----*/
 
 
 /*Login part*/
@@ -810,4 +949,23 @@ a {
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
+}
+
+/*Email part*/
+#email {
+  position: relative;
+  padding-left: 0.2rem !important;
+  padding-top: 0.5rem;
+ 
+}
+#email-client-wrapper {
+  min-height: 100vh !important; 
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.custom-backdrop {
+  position: absolute !important;
+  inset: 0 !important; 
+  z-index: 1040 !important;
+  background-color: rgba(212, 10, 10, 0.5); /* nebo dle potřeby */
 }

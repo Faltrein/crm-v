@@ -3,7 +3,7 @@ import { CookieHandlerType} from "../app_types/global_types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { ActiveLinkType, Col_6FloatInputType, Col_6Type, GenericDropdownType } from "./venca_lib_types";
+import { ActiveLinkType, Col_6FloatInputType, Col_6Type, GenericDropdownType, VBtnType } from "./venca_lib_types";
 import  Col  from "react-bootstrap/Col";
 import { Dropdown, FloatingLabel, Form } from "react-bootstrap";
 import { DropdownTypes } from "./venca_lib_types";
@@ -182,3 +182,31 @@ export const GenericDropdown = ({ value, onChange, options, placeholder = "Vyber
     </Dropdown>
   );
 };
+
+export const V_btn = ({constHandler, text, waitingVal, successVal} : VBtnType) => {
+
+  return (
+    <>
+    {successVal && (
+      <Col xs="12" className="d-flex align-items-center justify-content-center mt-3">
+        <strong>Data úspěšně odeslána</strong>
+      </Col>
+    )}
+    <Col xs="12" className="d-flex align-items-center justify-content-center mt-3">
+      <button className={!waitingVal? "v-btn" : "v-btn-loader"} onClick={() => constHandler()} type="button">
+        {waitingVal ?  (
+        <div id="container">
+          <span className="loading-circle sp1">
+            <span className="loading-circle sp2">
+              <span className="loading-circle sp3"></span>
+            </span>
+          </span>
+        </div>
+        ) : (
+          text
+        )}
+      </button>
+    </Col>
+    </>
+  );
+}

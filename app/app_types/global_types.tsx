@@ -79,3 +79,26 @@ export type ZakazniciPageType = {
   predvolby?: predvolby[];
   staty?: staty[];
 }
+
+export type ZakazniciInsUpType = {
+  v_created: boolean,
+  jmeno: string,
+  surename: string,
+  userName: string,
+  mail: string,
+  secondMail: string,
+  prefix: string,
+  phone: string,
+  secondPrefix: string,
+  secondPhone: string,
+  city: string,
+  adress: string, 
+  owner: string,
+  web: string,
+  obcanstviVal: string,
+  psc: string,
+  accType: string,
+  password: string,
+  pozice: string,
+  patri_pod: string,
+}

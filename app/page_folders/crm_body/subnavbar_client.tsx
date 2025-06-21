@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/app/redux-store/hooks";
 import { deleteCookie } from "@/app/venca_lib/venca_lib";
 import { setSubnavOpen } from "@/app/redux-store/accountSlice";
 import { AccountSubnavClient } from "@/app/account/account_client";
+import { EmailSubnav } from "@/app/emails/emailClient";
 
 export const SubNawbar_client = () => {
   const pathname = usePathname();
@@ -20,6 +21,9 @@ export const SubNawbar_client = () => {
         break;
       case "/account":
         setSubnav(<AccountSubnavClient />)
+        break;
+      case "/emails":
+        setSubnav(<EmailSubnav />)
         break;
       default:
         setSubnav(null);

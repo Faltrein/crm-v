@@ -16,6 +16,7 @@ export const Crm_link = ({z_type} : CrmLinksType) => {
                     <ActiveLink href="/dane">Daně</ActiveLink>
                     <ActiveLink href="/to-do">To do list</ActiveLink>
                     <ActiveLink href="/zamestnanci">Zaměstnanci</ActiveLink>
+                    <ActiveLink href="/emails">Email client</ActiveLink>
                 </>
             );
         case z_type = "2":

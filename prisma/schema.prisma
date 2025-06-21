@@ -22,7 +22,7 @@ model v_login {
 
 model v_zakaznici {
   id          Int     @id @default(autoincrement())
-  z_id        Int
+  z_id        Int?    @default(0)
   z_name      String? @db.VarChar(40)
   z_surename  String? @db.VarChar(40)
   z_mail      String? @db.VarChar(50)
@@ -42,6 +42,8 @@ model v_zakaznici {
   z_psc       String? @db.VarChar(50)
   z_pic       String  @default("basic-profile.jpg") @db.VarChar(255)
   z_web       String? @db.VarChar(50)
+  patri_pod   String? @db.VarChar(30)
+  pozice      String? @db.VarChar(50)
 }
 
 model predvolby {

@@ -3,10 +3,11 @@ import React, {useRef, useEffect, useState} from "react";
 import {  useDispatch } from 'react-redux';
 import { useAppSelector, useAppDispatch } from 'app/redux-store/hooks';
 import { Container, Row, Col, Accordion, Tabs, Tab, FloatingLabel, Form, InputGroup } from 'react-bootstrap';
-import { Col_6FloatInput, GenericDropdown, MaxDropdown, PhonePrefixSelect } from "../venca_lib/venca_lib";
+import { Col_6FloatInput, GenericDropdown, getCookie, MaxDropdown, PhonePrefixSelect, V_btn } from "../venca_lib/venca_lib";
 import { ZakazniciPageType } from "../app_types/global_types";
 import { patri_pod_data,  pozice_data, z_type } from "../shortcuts/shortcuts";
-
+import { redirect } from "next/navigation";
+import axios from "axios";
 
 export const ZakazniciPage = ({predvolby, staty} : ZakazniciPageType) => {
   const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
@@ -74,6 +75,8 @@ const Pridat_zakaznika = ({predvolby, staty} : ZakazniciPageType) => {
   const [zamestnanec, setZamestnanec] = useState(false);
   const [pozice, setPozice] = useState("");
   const [patriPod, setPatriPod] = useState("");
+  const [successVal, setSuccessVal] = useState(false);
+  const [waitingVal, setWaitingVal] = useState(false); 
 
   const handleStateChange = (value: string | null) => {
     if (value !== null) {
@@ -114,6 +117,51 @@ const Pridat_zakaznika = ({predvolby, staty} : ZakazniciPageType) => {
       setSecondPrefix(value);
     }
   };
+
+  const ulozZakaznika = async () => {
+    //zde bude kolekce dat odesílaných axiosem na api
+    setWaitingVal(true);
+    setSuccessVal(true);
+
+    const zak_id = getCookie("zak_id");
+    if (!zak_id) redirect("/");
+
+    
+    try {
+      const response = await axios.post("api/account_router", {
+        action: "ulozZakaznika",
+        v_created: true,
+        jmeno: name,
+        surename: surName,
+        userName: userName,
+        mail: mail,
+        secondMail: secondMail,
+        prefix: prefix,
+        phone: phone,
+        secondPrefix: secondPrefix,
+        secondPhone: secondPhone,
+        city: city,
+        adress: adress, 
+        owner: owner,
+        web: web,
+        obcanstviVal: obcanstviVal,
+        psc: psc,
+        accType: accType,
+        password: password,
+        pozice: pozice,
+        patri_pod: patriPod,
+      });
+
+      const data = response.data;
+
+      if (data.succes) {
+        setSuccessVal(true);
+        setWaitingVal(false);
+      }
+    } catch {
+      setSuccessVal(false);
+    }
+  }
 
   const accTypeOptions = z_type.map(({id, typ}) => ({id, label: typ}));
   const patriPodOptions = patri_pod_data.map(({id, typ}) => ({id, label: typ}));
@@ -219,7 +267,7 @@ const Pridat_zakaznika = ({predvolby, staty} : ZakazniciPageType) => {
             }}
           /> 
         </Col>
-        <Col xs="12" lg="6" className="pb-3 pe-3">
+        <Col xs="12" lg="6" className="pb-3">
           <GenericDropdown value={pozice} options={poziceOptions}  placeholder="Pozice zaměstnance"
             onChange={(val) => {
               if (val) setPozice(val);
@@ -228,6 +276,7 @@ const Pridat_zakaznika = ({predvolby, staty} : ZakazniciPageType) => {
         </Col>
       </>
       )}
+       <V_btn constHandler={ulozZakaznika} waitingVal={waitingVal} successVal={successVal} text="Ulož zákazníka" />
     </Row>
   );
 }

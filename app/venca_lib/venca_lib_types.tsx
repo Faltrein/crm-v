@@ -47,3 +47,10 @@ export type GenericDropdownType = {
   options: Option[];
   placeholder?: string;
 }
+
+export type VBtnType = {
+  constHandler: () => Promise<void>;
+  text: string;
+  waitingVal: boolean;
+  successVal: boolean;
+}

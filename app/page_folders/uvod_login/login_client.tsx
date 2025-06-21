@@ -103,17 +103,17 @@ export const Login_client = ({consentValue} : CookiesLoginType) => {
                         <h1 className="text-center display-1">V-crm Login</h1>
                     </div>
                     <div className="col-12 mt-3">
-                        <div className="input-group mb-3 rounded-input ">
+                        <div className="input-group mb-3 rounded-input">
                             <span className="input-group-text bg-v-light border-v">
                                 <i className="bi bi-person-circle fs-5 px-2 text-white"></i>
                             </span>
-                            <input type="text" aria-label="Password" className="form-control" placeholder="Email nebo username" value={user} onChange={e => setUser(e.target.value)} />
+                            <input type="text" aria-label="Password" className="form-control border-left-none" placeholder="Email nebo username" value={user} onChange={e => setUser(e.target.value)} />
                         </div>
                         <div className="input-group mb-3 rounded-input position-rel pe-5">
                             <span className="input-group-text bg-v-light border-v">
                                 <i className="bi bi-lock-fill fs-5 px-2 text-white"></i>
                             </span>
-                            <input type={showPassword ? "text" : "password"} className="form-control " placeholder="Heslo" value={pass} onChange={e => setPass(e.target.value)}/>
+                            <input type={showPassword ? "text" : "password"} className="form-control border-none" placeholder="Heslo" value={pass} onChange={e => setPass(e.target.value)}/>
                             <button className="eye-pos" type="button" onClick={togglePassword} aria-label="Zobrazit heslo">
                                 <i className={`bi fs-2 text-secondary ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                             </button>
