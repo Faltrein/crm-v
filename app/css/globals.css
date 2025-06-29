@@ -407,6 +407,8 @@
   border-radius: 0 0 0 0 !important;
 }
 
+
+
 /*--------*/
 
 /*personal global styles*/
@@ -597,6 +599,7 @@ a {
 /*----------*/
 
 /*Loader*/
+
 #container {
   position: absolute;
   top: 0;
@@ -954,9 +957,7 @@ a {
 /*Email part*/
 #email {
   position: relative;
-  padding-left: 0.2rem !important;
-  padding-top: 0.5rem;
- 
+  margin-left: 2px !important;
 }
 #email-client-wrapper {
   min-height: 100vh !important; 
@@ -968,4 +969,13 @@ a {
   inset: 0 !important; 
   z-index: 1040 !important;
   background-color: rgba(212, 10, 10, 0.5); /* nebo dle potřeby */
+}
+
+.custom-centered-modal {
+  position: absolute;
+  top: 25%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  margin: 0 !important; 
+  z-index: 1050; 
 }

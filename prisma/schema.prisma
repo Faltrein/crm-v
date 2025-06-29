@@ -56,3 +56,16 @@ model staty {
   stat      String @db.VarChar(100)
   obcanstvi String @db.VarChar(100)
 }
+
+model v_added_emails {
+  id           Int       @id @default(autoincrement()) @db.UnsignedInt
+  email        String    @unique(map: "email") @db.VarChar(255)
+  password     String?   @db.Text
+  provider     String    @db.VarChar(100)
+  oauth        Boolean   @default(false)
+  accessToken  String?   @db.Text
+  refreshToken String?   @db.Text
+  expiresAt    DateTime? @db.DateTime(0)
+  createdAt    DateTime  @default(now()) @db.DateTime(0)
+  updatedAt    DateTime  @default(now()) @db.DateTime(0)
+}

@@ -102,3 +102,13 @@ export type ZakazniciInsUpType = {
   pozice: string,
   patri_pod: string,
 }
+
+export type SaveEmailAccountParams = {
+  email: string;
+  password?: string;
+  provider: string;  // např. "google", "outlook"
+  oauth: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresAt?: Date;
+};
