@@ -77,9 +77,36 @@ export const Email_client = () => {
         setSelectedEmail(email);
     }, [searchParams]);
 
+    const getEmailsToCli = async (email:string) => {
+        const zak_id = getCookie("zak_id");
+
+        try {
+        const res = await axios.post("/api/get_emails_to_cli", { zak_id, email });
+        if (res.data.success) {
+            const messages = res.data.data || [];
+
+            // Mapa pro uchování unikátních labelů
+            const labelSet = new Set<string>();
+
+            messages.forEach((msg: any) => {
+                if (Array.isArray(msg.labelIds)) {
+                msg.labelIds.forEach((label: string) => labelSet.add(label));
+                }
+            });
+
+            // Vypsání všech unikátních labelů
+            console.log("Unikátní labely (kategorie):", Array.from(labelSet));
+        } else {
+            console.error("Chyba:", res.data.message);
+        }
+        } catch (error) {
+        console.error("Chyba při načítání:", error);
+        }
+    };
+
     useEffect(() => {
         if (selectedEmail) {
-            console.log("STATE selectedEmail", selectedEmail);
+            getEmailsToCli(selectedEmail);
         }
     }, [selectedEmail]);
     return (
