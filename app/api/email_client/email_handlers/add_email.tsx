@@ -29,7 +29,7 @@ export function detectProvider(email: string) {
   return { name: "generic", oauth: false };
 }
 
-export function getOAuthRedirectUrl(provider: string, email: string) {
+export function getOAuthRedirectUrl(provider: string, email: string, zak_id:string) {
   const scopes: Record<string, string[]> = {
     google: ["https://mail.google.com/"], // tady můžeš přidat další
     microsoft: [], // např. Microsoft Graph scopes
@@ -44,6 +44,7 @@ export function getOAuthRedirectUrl(provider: string, email: string) {
     action: "start",
     provider,
     email,
+    zak_id,
     scope: selectedScopes.join(" "),
   });
 
@@ -52,8 +53,21 @@ export function getOAuthRedirectUrl(provider: string, email: string) {
   return url;
 }
 
+async function emailControl (email:  string, zak_id: string) {
+  const zak_id_pass = Number(zak_id);
+  const existingEmail = await prisma.v_added_emails.findFirst({
+    where: {
+      email,
+      zak_id: zak_id_pass,
+    },
+  });
+
+  return existingEmail ? false : true;
+}
+
 export async function saveEmailAccount({
   email,
+  zak_id,
   password,
   provider,
   oauth,
@@ -67,8 +81,11 @@ export async function saveEmailAccount({
     hashedPassword = await bcrypt.hash(password, 10);
   }
 
+  const zak_id_pass = Number(zak_id);
+
   return await prisma.v_added_emails.create({
     data: {
+      zak_id: zak_id_pass,
       email,
       password: hashedPassword,
       provider,
@@ -80,35 +97,42 @@ export async function saveEmailAccount({
   });
 }
 
-export default async function handleAddEmail(body: any) {
-  const { email, password } = body;
+export default async function handleAddEmail(body: SaveEmailAccountParams) {
+  const { email, password, zak_id } = body;
 
   if (!email || typeof email !== "string") {
     return NextResponse.json({ success: false, message: "Neplatný e-mail" }, { status: 400 });
   }
+  const emailKontrola = await emailControl(email, zak_id);
+  if (!emailKontrola) {
+    return NextResponse.json({ success: true, existence: true });
+  } else {
+    const provider = detectProvider(email);
 
-  const provider = detectProvider(email);
+    if (provider.oauth) {
+      const redirectUrl = getOAuthRedirectUrl(provider.name, email, zak_id);
+      return NextResponse.json({
+        success: true,
+        oauth: true,
+        redirectUrl,
+      });
+    }
 
-  if (provider.oauth) {
-    const redirectUrl = getOAuthRedirectUrl(provider.name, email);
-    return NextResponse.json({
-      success: true,
-      oauth: true,
-      redirectUrl,
-    });
-  }
+    try {
+      
+      const result = await saveEmailAccount({
+        email,
+        zak_id,
+        password,
+        provider: provider.name,
+        oauth: provider.oauth,
+      });
 
-  try {
-    const result = await saveEmailAccount({
-      email,
-      password,
-      provider: provider.name,
-      oauth: provider.oauth,
-    });
-
-    return NextResponse.json({ success: true, result });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ success: false, message: "Nepodařilo se uložit účet" }, { status: 500 });
+      return NextResponse.json({ success: true, result });
+      
+    } catch (err) {
+      console.error(err);
+      return NextResponse.json({ success: false, message: "Nepodařilo se uložit účet" }, { status: 500 });
+    }
   }
 }

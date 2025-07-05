@@ -68,4 +68,5 @@ model v_added_emails {
   expiresAt    DateTime? @db.DateTime(0)
   createdAt    DateTime  @default(now()) @db.DateTime(0)
   updatedAt    DateTime  @default(now()) @db.DateTime(0)
+  zak_id       Int?
 }

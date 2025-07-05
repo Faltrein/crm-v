@@ -105,6 +105,7 @@ export type ZakazniciInsUpType = {
 
 export type SaveEmailAccountParams = {
   email: string;
+  zak_id: string;
   password?: string;
   provider: string;  // např. "google", "outlook"
   oauth: boolean;

@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "../redux-store/hooks";
 import { addEmailModal } from "../redux-store/emailCliSlice";
 import axios from "axios";
 import validator from "validator";
+import { getCookie } from "../venca_lib/venca_lib";
 
 export const EmailSubnav = () => {
     const dispatch = useAppDispatch();
@@ -12,8 +13,9 @@ export const EmailSubnav = () => {
     const showAddModal = () => {
         dispatch(addEmailModal());
     }
-
+    
     const addModal = useAppSelector(state => state.email.emailAddModal);
+
 
     return (
         <div className="d-flex align-items-center justify-content-start">
@@ -52,6 +54,7 @@ export const Add_Email_Modal = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false); 
     const [error, setError] = useState(""); 
+    const [emailExist, setEmailExist] = useState(false);
 
     const togglePassword = () => {
         setShowPassword(prev => !prev);
@@ -101,22 +104,31 @@ export const Add_Email_Modal = () => {
             return;
         }
 
+        const zak_id = getCookie('zak_id');
+
         try {
             setLoading(true);
             const res = await axios.post("/api/email_client", {
                 action: "add-email",
                 email: user,
-                password: pass
+                password: pass,
+                zak_id: zak_id
             });
 
             if (res.data.success) {
+               console.log('res',res);
+                if (res.data.existence) {
+                    setEmailExist(true);
+                } else {
+                    setEmailExist(false);
+                }
                 if (res.data.redirectUrl) {
                     const popup = window.open(res.data.redirectUrl, '_blank');
 
                     const timer = setInterval(() => {
                     if (!popup || popup.closed) {
                         clearInterval(timer);
-                        alert('Popup zavřeno, můžeš pokračovat');
+                       
                         // Tady můžeš napsat kód, který má proběhnout po zavření popupu
                     }
                     }, 500); // kontroluj každých 500 ms
@@ -183,6 +195,9 @@ export const Add_Email_Modal = () => {
                     <i className={`bi fs-4 text-secondary ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                     </Button>
                 </InputGroup>
+                {emailExist && (
+                    <strong className="text-danger">Email již existuje</strong>
+                )}
             </Modal.Body>
             <Modal.Footer className="d-flex align-items-center justify-content-center">
                 <button className="v-btn" onClick={handleSave} disabled={loading}>

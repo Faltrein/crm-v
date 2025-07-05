@@ -1,6 +1,6 @@
 export type Provider = "google" | "outlook" | "seznam";
 
-export function getAuthUrl(email: string, provider: Provider) {
+export function getAuthUrl(email: string, provider: Provider, zak_id:string) {
   const redirectUri = `http://localhost:3000/api/oauth?action=callback&provider=${provider}`;
 
   switch (provider) {
@@ -10,8 +10,12 @@ export function getAuthUrl(email: string, provider: Provider) {
          "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://mail.google.com/"
       );
 
+       const statePayload = {
+        email,
+        zak_id,
+      };
       // Zakódujeme e-mail do state pro bezpečný přenos
-      const state = encodeURIComponent(Buffer.from(JSON.stringify({ email })).toString("base64"));
+        const state = encodeURIComponent(Buffer.from(JSON.stringify(statePayload)).toString("base64"));
 
       const url =
         `https://accounts.google.com/o/oauth2/v2/auth` +
@@ -24,7 +28,6 @@ export function getAuthUrl(email: string, provider: Provider) {
         `&login_hint=${encodeURIComponent(email)}` +
         `&state=${state}`;
 
-      console.log('Google OAuth URL:', url);
       return url;
     }
 
@@ -84,9 +87,6 @@ export async function getTokens(provider: Provider, code: string) {
       });
 
       if (!response.ok) {
-        console.log('redirect uri', redirectUri);
-        console.log('body paramentry', bodyParams);
-        console.log('g-response', response);
         const errorText = await response.text();
         console.error(`Google token error ${response.status}:`, errorText);
         throw new Error(`Failed to get tokens from Google: ${response.status} - ${errorText}`);
@@ -140,9 +140,6 @@ export async function getTokens(provider: Provider, code: string) {
         expiresAt: new Date(Date.now() + data.expires_in * 1000),
       };
     }
-
-    case "seznam":
-      throw new Error("Seznam OAuth není podporován");
 
     default:
       throw new Error("Nepodporovaný provider");
