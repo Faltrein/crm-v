@@ -1,11 +1,13 @@
 "use client";
 import React,{ useEffect, useState } from "react";
-import { Col, Row, Container, Modal, Button, Form, InputGroup } from "react-bootstrap";
+import { Col, Row, Container, Modal, Button, Form, InputGroup, Dropdown } from "react-bootstrap";
 import { useAppSelector, useAppDispatch } from "../redux-store/hooks";
 import { addEmailModal } from "../redux-store/emailCliSlice";
 import axios from "axios";
 import validator from "validator";
 import { getCookie } from "../venca_lib/venca_lib";
+import { Emails } from "../app_types/global_types";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export const EmailSubnav = () => {
     const dispatch = useAppDispatch();
@@ -16,17 +18,70 @@ export const EmailSubnav = () => {
     
     const addModal = useAppSelector(state => state.email.emailAddModal);
 
+    const [emails, setEmails] = useState([]);
 
+    const getEmails = async () => {
+        const zak_id = getCookie("zak_id");
+
+        try {
+        const res = await axios.post("/api/get_emails", { zak_id });
+        if (res.data.success) {
+             setEmails(res.data.emails);
+        } else {
+            console.error("Chyba:", res.data.message);
+        }
+        } catch (error) {
+        console.error("Chyba při načítání:", error);
+        }
+    };
+    useEffect(() => {
+        getEmails();
+    }, []);
+
+     const router = useRouter();
+
+    const handleEmailSelect = (email: string) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("e", email); // nastaví nebo přepíše parametr
+        router.push(`?${searchParams.toString()}`);
+    }
     return (
         <div className="d-flex align-items-center justify-content-start">
             <button type="button" className={`text-dark ${addModal ? 'text-shadow' : ''}`} onClick={showAddModal}>Přidej email</button>
+            {emails.length > 0 && (
+                <Dropdown className="dropdown-menu-custom-index">
+                    <Dropdown.Toggle as="button" type="button" className="text-dark btn btn-link" id="dropdown-custom-toggle">
+                    Emaily
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="dropdown-menu-custom-index">
+                    {emails.map((item: Emails) => (
+                        <Dropdown.Item key={item.id} onClick={() => handleEmailSelect(item.email)}>
+                        {item.email}
+                        </Dropdown.Item>
+                    ))}
+                    </Dropdown.Menu>
+                </Dropdown>
+                )}
         </div>
     );
 }
 export const Email_client = () => {
     const isSubnavOpen = useAppSelector(state => state.account.isSubnavOpen);
 
-    
+    const searchParams = useSearchParams();
+    const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
+
+    useEffect(() => {
+        const email = searchParams.get("e");
+        setSelectedEmail(email);
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (selectedEmail) {
+            console.log("STATE selectedEmail", selectedEmail);
+        }
+    }, [selectedEmail]);
     return (
         <Container fluid className={isSubnavOpen ? "margin-pro-redux" : ""} >
             <div id="email-client-wrapper" className="position-rel">
@@ -116,7 +171,6 @@ export const Add_Email_Modal = () => {
             });
 
             if (res.data.success) {
-               console.log('res',res);
                 if (res.data.existence) {
                     setEmailExist(true);
                 } else {

@@ -113,3 +113,8 @@ export type SaveEmailAccountParams = {
   refreshToken?: string;
   expiresAt?: Date;
 };
+
+export type Emails = {
+  id: number;
+  email: string;
+}

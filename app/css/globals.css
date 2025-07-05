@@ -895,7 +895,6 @@ a {
   padding-bottom: 0.75rem;
   box-shadow: 0 4px 12px var(--v-rbga);
   max-height: 90vh;
-  overflow: hidden;
   
   transition: left 0.4s ease-in-out; /* animace */
 }
@@ -978,4 +977,13 @@ a {
   transform: translate(-50%, -50%);
   margin: 0 !important; 
   z-index: 1050; 
+}
+
+.btn-link {
+  text-decoration: none !important;
+  border: none;
+}
+.dropdown-menu-custom-index {
+  z-index: 9999 !important;
+  overflow: visible !important;
 }
